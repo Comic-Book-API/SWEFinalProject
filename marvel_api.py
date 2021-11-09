@@ -28,7 +28,7 @@ hash.update(public_byte)
 hashhex = hash.hexdigest()
 
 urlAddOn = f"?ts={ts}&apikey={public_key}&hash={hashhex}"
-search = "Hulk"
+search = "Stan Lee"
 
 
 def getComicByTitle(search, offset):
@@ -87,6 +87,29 @@ def getComicByCharacter(search, offset):
     return (title, imgLink)
 
 
+def getComicByCreator(search, offset):
+    creator = getCreatorID(search)
+    base_url = "https://gateway.marvel.com/v1/public/comics"
+    params = {
+        "ts": ts,
+        "apikey": public_key,
+        "hash": hashhex,
+        "limit": 1,
+        "offset": offset,
+        "creators": creator,
+    }
+    endpoint_request = requests.get(url=base_url, params=params)
+    data = endpoint_request.json()
+    print(data)
+    data_results = data["data"]["results"]
+
+    title = data_results[0]["title"]
+    imgPath = data_results[0]["images"][0]["path"]
+    imgLink = imgPath + "/standard_fantastic.jpg"
+
+    return (title, imgLink)
+
+
 def getSeries(search, offset):
     base_url = "https://gateway.marvel.com/v1/public/series"
     params = {
@@ -115,6 +138,7 @@ def getCharacter(search, offset):
         "hash": hashhex,
         "nameStartsWith": search,
         "limit": 1,
+        "offset": offset,
     }
     endpoint_request = requests.get(url=base_url, params=params)
     data = endpoint_request.json()
@@ -130,4 +154,22 @@ def getCharacter(search, offset):
     return (id, name, description, imgLink)
 
 
-print(getComicByCharacter(search, 0))
+# Helper function to fetch the id of a creator to feed into the getComicByCreator function.
+def getCreatorID(search):
+    base_url = "https://gateway.marvel.com/v1/public/creators"
+    params = {
+        "ts": ts,
+        "apikey": public_key,
+        "hash": hashhex,
+        "nameStartsWith": search,
+        "limit": 1,
+    }
+
+    endpoint_request = requests.get(url=base_url, params=params)
+    data = endpoint_request.json()
+    data_results = data["data"]["results"]
+
+    return data_results[0]["id"]
+
+
+print(getComicByCreator(search, 0))
