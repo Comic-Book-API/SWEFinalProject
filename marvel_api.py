@@ -18,7 +18,7 @@ hash = hashlib.md5()
 
 # The Marvel API requires servers to have parameters before accessing them. The paramaters are: a timestamp (ts), the public api key, and a hash with the md5 algorithm of the ts, public key, and private key mashed together
 # To do this, I made ts a random time, converted ts, public key, and private key into byte format so they can be fed into the md5 formatter, and then convert the hashed string into the hex form, which is the form required by the Marvel API.
-ts = "randomtime"
+ts = str(time.time())
 ts_byte = bytes(ts, "utf-8")
 public_byte = bytes(public_key, "utf-8")
 private_byte = bytes(private_key, "utf-8")
@@ -28,7 +28,7 @@ hash.update(public_byte)
 hashhex = hash.hexdigest()
 
 urlAddOn = f"?ts={ts}&apikey={public_key}&hash={hashhex}"
-search = input("Enter the title of the comic you would like to search for ")
+search = "Hulk"
 
 
 def getComicByTitle(search, offset):
@@ -39,24 +39,52 @@ def getComicByTitle(search, offset):
         "hash": hashhex,
         "titleStartsWith": search,
         "limit": 1,
+        "offset": offset,
+    }
+
+    endpoint_request = requests.get(url=base_url, params=params)
+    data = endpoint_request.json()
+    data_results = data["data"]["results"]
+
+    # Returns the title, the on sale date of the comic, a link to an image of the comic, and a list of collaborators who worked on the comic.
+    title = data_results[0]["title"]
+    onSaleDate = data_results[0]["dates"][0]["date"]
+    creators = data_results[0]["creators"]["items"]
+    creatorList = []
+
+    # For the API, we have to change the link returned by the json or else it gives a permission denied error. To do this, we just append a string onto the end that Marvel has pre-defined. standard_fantastic is the version of the img we chose.
+    imgPath = data_results[0]["images"][0]["path"]
+    imgLink = imgPath + "/standard_fantastic.jpg"
+
+    for i in range(len(creators)):
+        creatorList.append(data_results[0]["creators"]["items"][i]["name"])
+
+    print(data_results[0].keys())
+
+    return (title, creatorList, onSaleDate, imgLink)
+
+
+def getComicByCharacter(search, offset):
+    # Because the parameter must be a character ID, we have to make a call to the getCharacters so we can have the ID of the search query. From there, it's passed into the parameters to perform the search.
+    (id, name, description, imgLink) = getCharacter(search, 0)
+    base_url = "https://gateway.marvel.com/v1/public/comics"
+    params = {
+        "ts": ts,
+        "apikey": public_key,
+        "hash": hashhex,
+        "characters": id,
+        "limit": 1,
+        "offset": offset,
     }
     endpoint_request = requests.get(url=base_url, params=params)
     data = endpoint_request.json()
     data_results = data["data"]["results"]
+
     title = data_results[0]["title"]
-    creators = data_results[0]["creators"]["items"]
-    onSaleDate = data_results[0]["dates"][0]["date"]
-    series = data_results[0]["series"]["resourceURI"]
-    seriesLink = series + f"{urlAddOn}"
-    creatorList = []
-    for i in range(len(creators)):
-        creatorList.append(data_results[0]["creators"]["items"][i]["name"])
     imgPath = data_results[0]["images"][0]["path"]
     imgLink = imgPath + "/standard_fantastic.jpg"
 
-    print(data_results[0].keys())
-
-    return (title, creatorList, onSaleDate, seriesLink, imgLink)
+    return (title, imgLink)
 
 
 def getSeries(search, offset):
@@ -79,4 +107,27 @@ def getSeries(search, offset):
     print(titleList, next)
 
 
-print(getSeries(search, 1))
+def getCharacter(search, offset):
+    base_url = "https://gateway.marvel.com/v1/public/characters"
+    params = {
+        "ts": ts,
+        "apikey": public_key,
+        "hash": hashhex,
+        "nameStartsWith": search,
+        "limit": 1,
+    }
+    endpoint_request = requests.get(url=base_url, params=params)
+    data = endpoint_request.json()
+    data_results = data["data"]["results"]
+
+    name = data_results[0]["name"]
+    description = data_results[0]["description"]
+    id = data_results[0]["id"]
+
+    imgPath = data_results[0]["thumbnail"]["path"]
+    imgLink = imgPath + "/standard_fantastic.jpg"
+
+    return (id, name, description, imgLink)
+
+
+print(getComicByCharacter(search, 0))
