@@ -9,7 +9,7 @@ load_dotenv(find_dotenv())
 
 @app.route("/")
 def index():
-    return flask.render_template("index.html")
+    return flask.render_template("index.html") #signup.html
 
 
 app.run()
