@@ -28,7 +28,7 @@ hash.update(public_byte)
 hashhex = hash.hexdigest()
 
 urlAddOn = f"?ts={ts}&apikey={public_key}&hash={hashhex}"
-search = "Stan Lee"
+search = input("Enter in the name of a comic book: ")
 
 
 def getComicByTitle(search, offset):
@@ -81,10 +81,8 @@ def getComicByCharacter(search, offset):
     data_results = data["data"]["results"]
 
     title = data_results[0]["title"]
-    imgPath = data_results[0]["images"][0]["path"]
-    imgLink = imgPath + "/standard_fantastic.jpg"
 
-    return (title, imgLink)
+    return getComicByTitle(title, offset)
 
 
 def getComicByCreator(search, offset):
@@ -100,14 +98,11 @@ def getComicByCreator(search, offset):
     }
     endpoint_request = requests.get(url=base_url, params=params)
     data = endpoint_request.json()
-    print(data)
     data_results = data["data"]["results"]
 
     title = data_results[0]["title"]
-    imgPath = data_results[0]["images"][0]["path"]
-    imgLink = imgPath + "/standard_fantastic.jpg"
 
-    return (title, imgLink)
+    return getComicByTitle(title, offset)
 
 
 def getSeries(search, offset):
@@ -172,4 +167,4 @@ def getCreatorID(search):
     return data_results[0]["id"]
 
 
-print(getComicByCreator(search, 0))
+print(getComicByTitle(search, 0))
