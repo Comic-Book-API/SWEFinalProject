@@ -112,3 +112,9 @@ img {
 @media only screen and (max-width: 300px) {
     .previous, .next {font-size: 11px;}
 }
+
+/* creates multiple columns in the home/main page */
+.history {
+    column-count: 3;
+    column-gap: 40px;
+}
