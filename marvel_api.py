@@ -15,6 +15,7 @@ private_key = os.getenv("marvel_private_key")
 
 hash = hashlib.md5()
 
+# NOTE: We should move the default "params" variable into either a global or a function, then modify based on that in the function. This is good code, I think.
 
 # The Marvel API requires servers to have parameters before accessing them. The paramaters are: a timestamp (ts), the public api key, and a hash with the md5 algorithm of the ts, public key, and private key mashed together
 # To do this, I made ts a random time, converted ts, public key, and private key into byte format so they can be fed into the md5 formatter, and then convert the hashed string into the hex form, which is the form required by the Marvel API.
