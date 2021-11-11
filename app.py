@@ -1,12 +1,6 @@
 import flask
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine
-from sqlalchemy_utils import database_exists, create_database
 import os
-import getpass
 from dotenv import find_dotenv, load_dotenv
-from cryptography.fernet import Fernet
-
 
 app = flask.Flask(__name__)
 
@@ -167,6 +161,7 @@ def get_account_db_comics(uid):
 def get_account_db_characters(uid):
     return get_account_db_entry(uid).characters
 
+
 @app.route("/")
 def index():
     return flask.render_template("index.html") #signup.html
@@ -183,5 +178,6 @@ def register():
     # we just need database to continue
 
     return flask.redirect("/") #change to login.html
+
 
 app.run()
