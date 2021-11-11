@@ -1,0 +1,3 @@
+
+Retrieves data by the characters endpoint
+print(data["data"]["results"][0]["comics"]["items"][0]["name"])
