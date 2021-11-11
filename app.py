@@ -11,5 +11,18 @@ load_dotenv(find_dotenv())
 def index():
     return flask.render_template("index.html") #signup.html
 
+@app.route("/signup")
+def signup():
+    return flask.render_template("signup.html")
+
+@app.route("/signup", methods=["POST"])
+def register():
+    username = flask.request.form.get("username")
+    password = flask.request.form.get("password")
+
+    # we just need database to continue
+
+    return flask.redirect("/") #change to login.html
+
 
 app.run()
