@@ -8,19 +8,21 @@ app = flask.Flask(__name__)
 
 load_dotenv(find_dotenv())
 
+CRYPTOGRAPHY_KEY = os.getenv("CRYPTO_KEY").encode("UTF-8")
+encryption_engine = Fernet(CRYPTOGRAPHY_KEY)
 # database location
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://tmp.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False  # overhead is bad
 # Database config and setup
 db = SQLAlchemy(app)
 MAX_ID_ENTRIES = 20 # If this value is made greater, the database must be completely reinitialized
 
 # TODO:
 # password cryptography
-# function to make a new user
 class Account(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.BigInteger, nullable=False)
+    password = db.Column(db.String(100), nullable=False)
     # The following fields encode a list of up to 20 id's into a string.
     # This code assumes that the max length for any one of these ids is 8 digits/characters
     # the encoding for this is very simple. each item is separated by ;'s
@@ -30,6 +32,19 @@ class Account(db.Model):
 
 db.create_all()
 db.session.commit()
+
+# returns encrypted hash
+def encrypt(word):
+    word = word.encode('UTF-8')
+    hash = encryption_engine.encrypt(word)
+    hash = hash.decode('UTF-8')
+    return hash
+
+def decrypt(hash):
+    hash = hash.encode('UTF-8')
+    word = encryption_engine.decrypt(hash)
+    word = word.decode('UTF-8')
+    return word
 
 def add_account(username, password):
     new_acc = Account(username = username, password = password)
