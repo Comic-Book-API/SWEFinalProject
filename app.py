@@ -17,7 +17,6 @@ MAX_ID_ENTRIES = 20 # If this value is made greater, the database must be comple
 # TODO:
 # password cryptography
 # function to make a new user
-# string id encoding
 class Account(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -31,6 +30,11 @@ class Account(db.Model):
 
 db.create_all()
 db.session.commit()
+
+def add_account(username, password):
+    new_acc = Account(username = username, password = password)
+    db.session.add(new_acc)
+    db.session.commit()
 
 # removes comic from the comics entry for the given user
 # returns 0 if successful, -1 if the comic could not be found
