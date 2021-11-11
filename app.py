@@ -149,6 +149,7 @@ def encode_string(id_list):
         ids_str += id
     return ids_str
 
+
 # returns the UID of the given username.
 # returns -1 if the username doesn't exist in the database.
 get uid_by_username(username):
