@@ -2,9 +2,42 @@
 <html>
 
 <head>
-    <title></title>
+    <title> Explore Comics </title>
     <link rel="stylesheet" href="/static/style.css">
     <link rel="icon" href="/static/comic-icon-png-2.png">
+
+    <script>
+     var slide_index = 1;
+        showSlide(slide_index);
+
+        function moveSlides(n) {
+            showSlide(slide_index += n);
+        }
+
+        function currentSlide(n) {
+            showSlide(slide_index = n);
+        }
+
+        function showSlide(n) {
+            var i;
+            var slides = document.getElementsByClassName("slides");
+            var dots = document.getElementsByClassName("dot");
+            if (n > slides.length) {
+                slide_index = 1;
+            }
+            if (n < 1) {
+                slide_index = slides.length;
+            }
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            slides[slide_index - 1].style.display = "block";
+            dots[slide_index - 1].className += " active";
+        }
+    </script>
 </head>
 
 <body>
@@ -19,7 +52,34 @@
         <h2> Just stuff </h2>
         <p> blah blah blah </p>
     </div>
-    <h1> Webpage will soon be populated</h1>
+    <h1> Webpage will soon be populated </h1>
+
+    <div class="slideshow-container">
+        <!-- instead of different img tags, we can just call an api call that is saved into a variable and access it here -->
+        <div class="slides fade">
+            <img src="/static/marvel.jpg" width="800" height="500" style="width: 100%;">
+        </div>
+
+        <div class="slides fade">
+            <img src="/static/avengers.jpg" width="800" height="500" style="width: 100%;">
+        </div>
+
+        <div class="slides fade">
+            <img src="/static/avengers-workout.jpg" width="800" height="500" style="width: 100%;">
+        </div>
+
+        <!-- next and previous buttons -->
+        <a class="previous" onclick="plusSlides(-1)">&#10094</a>
+        <a class="next" onclick="plusSlides(1)">&#10095</a>
+    </div>
+    <br>
+
+    <!-- the dots/circles -->
+    <div style="text-align: center;">
+        <span class="dot" onclick="currentSlide(1)"></span>
+        <span class="dot" onclick="currentSlide(2)"></span>
+        <span class="dot" onclick="currentSlide(3)"></span>
+    </div>
 </body>
 
 </html>
