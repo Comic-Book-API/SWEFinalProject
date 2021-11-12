@@ -87,78 +87,71 @@
         <div id="results"></div>
         <script>
             (function(){
-                // Functions
                 function buildQuiz(){
-                // variable to store the HTML output
+
                 const output = [];
 
-                // for each question...
-                myQuestions.forEach(
-                (currentQuestion, questionNumber) => {
+                //goes through all of the questions
+                quizQuestions.forEach(
+                (curr_question, question_num) => {
 
-                    // variable to store the list of possible answers
+                    //variable to store the list all of the possible answers
                     const answers = [];
 
-                    // and for each available answer...
-                    for(letter in currentQuestion.answers){
+                    for(letter in curr_question.answers){
 
-                    // ...add an HTML radio button
+                    //HTML radio button
                     answers.push(
                         `<label>
-                        <input type="radio" name="question${questionNumber}" value="${letter}">
+                        <input type="radio" name="question${question_num}" value="${letter}">
                         ${letter} :
-                        ${currentQuestion.answers[letter]}
+                        ${curr_question.answers[letter]}
                         </label>`
                     );
                     }
 
-                    // add this question and its answers to the output
+                    //add this question and its answers to the output
                     output.push(
                     `<div class="slide">
-                        <div class="question"> ${currentQuestion.question} </div>
+                        <div class="question"> ${curr_question.question} </div>
                         <div class="answers"> ${answers.join("")} </div>
                     </div>`
                     );
                 }
                 );
 
-                // finally combine our output list into one string of HTML and put it on the page
-                quizContainer.innerHTML = output.join('');
+                //finally combine the output list into one string of HTML and outputs it on the page
+                quiz_box.innerHTML = output.join('');
             }
 
-            function showResults(){
+            function results(){
 
-                // gather answer containers from our quiz
-                const answerContainers = quizContainer.querySelectorAll('.answers');
+                const answer_box = quiz_box.querySelectorAll('.answers');
 
-                // keep track of user's answers
-                let numCorrect = 0;
+                //keep track of user's correct answers
+                let correct_answers = 0;
 
-                // for each question...
-                myQuestions.forEach( (currentQuestion, questionNumber) => {
+                quizQuestions.forEach( (curr_question, question_num) => {
 
-                // find selected answer
-                const answerContainer = answerContainers[questionNumber];
-                const selector = `input[name=question${questionNumber}]:checked`;
-                const userAnswer = (answerContainer.querySelector(selector) || {}).value;
+                //gets the selected answer from user
+                const answer_section_box = answer_box[question_num];
+                const select = `input[name=question${question_num}]:checked`;
+                const users_answer_choice = (answer_section_box.querySelector(select) || {}).value;
 
-                // if answer is correct
-                if(userAnswer === currentQuestion.correctAnswer){
-                    // add to the number of correct answers
-                    numCorrect++;
-
-                    // color the answers green
-                    answerContainers[questionNumber].style.color = 'lightgreen';
+                //if answer is correct, the color will turn green
+                if(users_answer_choice === curr_question.correctAnswer){
+                    //updates the num of correct ans
+                    correct_answers++;
+                    answer_box[question_num].style.color = 'lightgreen';
                 }
-                // if answer is wrong or blank
+                // if answer is wrong/blank
                 else{
-                    // color the answers red
-                    answerContainers[questionNumber].style.color = 'red';
+                    answer_box[question_num].style.color = 'red';
                 }
                 });
 
-                // show number of correct answers out of total
-                resultsContainer.innerHTML = `${numCorrect} out of ${myQuestions.length}`;
+                //shows the number of correct answeers
+                result_box.innerHTML = `${correct_answers} out of ${quizQuestions.length}`;
             }
 
             function showSlide(n) {
@@ -166,34 +159,33 @@
                 slides[n].classList.add('active-slide');
                 currentSlide = n;
                 if(currentSlide === 0){
-                previousButton.style.display = 'none';
+                prev_button.style.display = 'none';
                 }
                 else{
-                previousButton.style.display = 'inline-block';
+                prev_button.style.display = 'inline-block';
                 }
                 if(currentSlide === slides.length-1){
-                nextButton.style.display = 'none';
-                submitButton.style.display = 'inline-block';
+                next_button.style.display = 'none';
+                submit_button.style.display = 'inline-block';
                 }
                 else{
-                nextButton.style.display = 'inline-block';
-                submitButton.style.display = 'none';
+                next_button.style.display = 'inline-block';
+                submit_button.style.display = 'none';
                 }
             }
 
-            function showNextSlide() {
+            function nextSlide() {
                 showSlide(currentSlide + 1);
             }
 
-            function showPreviousSlide() {
+            function previousSlide() {
                 showSlide(currentSlide - 1);
             }
 
-            // Variables
-            const quizContainer = document.getElementById('quiz');
-            const resultsContainer = document.getElementById('results');
-            const submitButton = document.getElementById('submit');
-            const myQuestions = [
+            const quiz_box = document.getElementById('quiz');
+            const result_box = document.getElementById('results');
+            const submit_button = document.getElementById('submit');
+            const quizQuestions = [
                 {
                 question: "Which of these is NOT a type of infinity stone?",
                 answers: {
@@ -298,22 +290,22 @@
                 }
             ];
 
-            // Kick things off
+            //builds the quiz
             buildQuiz();
 
-            // Pagination
-            const previousButton = document.getElementById("prev");
-            const nextButton = document.getElementById("next");
+            // helps buttons to work properly
+            const prev_button = document.getElementById("prev");
+            const next_button = document.getElementById("next");
             const slides = document.querySelectorAll(".slide");
             let currentSlide = 0;
 
-            // Show the first slide
+            //get the current slide, which will result in the first question
             showSlide(currentSlide);
 
-            // Event listeners
-            submitButton.addEventListener('click', showResults);
-            previousButton.addEventListener("click", showPreviousSlide);
-            nextButton.addEventListener("click", showNextSlide);
+            //helps buttons to work properly
+            submit_button.addEventListener('click', results);
+            prev_button.addEventListener("click", previousSlide);
+            next_button.addEventListener("click", nextSlide);
             })();
 
         </script>
