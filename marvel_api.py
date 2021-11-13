@@ -46,18 +46,6 @@ def getJSONData(searchField, url, search, offset):
 
 
 def getComicByTitle(search, offset):
-    base_url = "https://gateway.marvel.com/v1/public/comics"
-    params = {
-        "ts": ts,
-        "apikey": public_key,
-        "hash": hashhex,
-        "titleStartsWith": search,
-        "limit": 1,
-        "offset": offset,
-    }
-
-    endpoint_request = requests.get(url=base_url, params=params)
-    data = endpoint_request.json()
     data_results = getJSONData(
         "titleStartsWith", "https://gateway.marvel.com/v1/public/comics", search, offset
     )
@@ -81,18 +69,9 @@ def getComicByTitle(search, offset):
 def getComicByCharacter(search, offset):
     # Because the parameter must be a character ID, we have to make a call to the getCharacters so we can have the ID of the search query. From there, it's passed into the parameters to perform the search.
     (id, name, description, imgLink) = getCharacter(search, 0)
-    base_url = "https://gateway.marvel.com/v1/public/comics"
-    params = {
-        "ts": ts,
-        "apikey": public_key,
-        "hash": hashhex,
-        "characters": id,
-        "limit": 1,
-        "offset": offset,
-    }
-    endpoint_request = requests.get(url=base_url, params=params)
-    data = endpoint_request.json()
-    data_results = data["data"]["results"]
+    data_results = getJSONData(
+        "characters", "https://gateway.marvel.com/v1/public/comics", id, offset
+    )
 
     title = data_results[0]["title"]
 
@@ -100,19 +79,11 @@ def getComicByCharacter(search, offset):
 
 
 def getComicByCreator(search, offset):
+    # We can't search for the creator by name. It has to be by ID, so we need to call the helper function that will return the creator id of the search query/
     creator = getCreatorID(search)
-    base_url = "https://gateway.marvel.com/v1/public/comics"
-    params = {
-        "ts": ts,
-        "apikey": public_key,
-        "hash": hashhex,
-        "limit": 1,
-        "offset": offset,
-        "creators": creator,
-    }
-    endpoint_request = requests.get(url=base_url, params=params)
-    data = endpoint_request.json()
-    data_results = data["data"]["results"]
+    data_results = getJSONData(
+        "creators", "https://gateway.marvel.com/v1/public/comics", creator, offset
+    )
 
     title = data_results[0]["title"]
 
@@ -120,37 +91,24 @@ def getComicByCreator(search, offset):
 
 
 def getSeries(search, offset):
-    base_url = "https://gateway.marvel.com/v1/public/series"
-    params = {
-        "ts": ts,
-        "apikey": public_key,
-        "hash": hashhex,
-        "titleStartsWith": search,
-        "limit": 1,
-    }
-
-    endpoint_request = requests.get(url=base_url, params=params)
-    data = endpoint_request.json()
-    data_results = data["data"]["results"]
-    next = data_results[0]["next"]
+    # Not sure what we're going to do with this yet, but it doesn't hurt to includ0e it.
+    data_results = getJSONData(
+        "titleStartsWith", "https://gateway.marvel.com/v1/public/series", search, offset
+    )
     titleList = []
     for i in range(len(data_results)):
         titleList.append(data_results[i]["title"])
 
+    return titleList
+
 
 def getCharacter(search, offset):
-    base_url = "https://gateway.marvel.com/v1/public/characters"
-    params = {
-        "ts": ts,
-        "apikey": public_key,
-        "hash": hashhex,
-        "nameStartsWith": search,
-        "limit": 1,
-        "offset": offset,
-    }
-    endpoint_request = requests.get(url=base_url, params=params)
-    data = endpoint_request.json()
-    data_results = data["data"]["results"]
+    data_results = getJSONData(
+        "nameStartsWith",
+        "https://gateway.marvel.com/v1/public/characters",
+        search,
+        offset,
+    )
 
     name = data_results[0]["name"]
     description = data_results[0]["description"]
@@ -164,19 +122,9 @@ def getCharacter(search, offset):
 
 # Helper function to fetch the id of a creator to feed into the getComicByCreator function.
 def getCreatorID(search):
-    base_url = "https://gateway.marvel.com/v1/public/creators"
-    params = {
-        "ts": ts,
-        "apikey": public_key,
-        "hash": hashhex,
-        "nameStartsWith": search,
-        "limit": 1,
-    }
-
-    endpoint_request = requests.get(url=base_url, params=params)
-    data = endpoint_request.json()
-    data_results = data["data"]["results"]
-
+    data_results = getJSONData(
+        "nameStartsWith", "https://gateway.marvel.com/v1/public/creators", search
+    )
     return data_results[0]["id"]
 
 
