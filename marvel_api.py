@@ -15,8 +15,6 @@ private_key = os.getenv("marvel_private_key")
 
 hash = hashlib.md5()
 
-# NOTE: We should move the default "params" variable into either a global or a function, then modify based on that in the function. This is good code, I think.
-
 # The Marvel API requires servers to have parameters before accessing them. The paramaters are: a timestamp (ts), the public api key, and a hash with the md5 algorithm of the ts, public key, and private key mashed together
 # To do this, I made ts a random time, converted ts, public key, and private key into byte format so they can be fed into the md5 formatter, and then convert the hashed string into the hex form, which is the form required by the Marvel API.
 ts = str(time.time())
@@ -32,6 +30,21 @@ urlAddOn = f"?ts={ts}&apikey={public_key}&hash={hashhex}"
 search = input("Enter in the name of a comic book: ")
 
 
+def getJSONData(searchField, url, search, offset):
+    params = {
+        "ts": ts,
+        "apikey": public_key,
+        "hash": hashhex,
+        f"{searchField}": search,
+        "limit": 1,
+        "offset": offset,
+    }
+    endpoint_request = requests.get(url=url, params=params)
+    data = endpoint_request.json()
+    data_results = data["data"]["results"]
+    return data_results
+
+
 def getComicByTitle(search, offset):
     base_url = "https://gateway.marvel.com/v1/public/comics"
     params = {
@@ -45,7 +58,9 @@ def getComicByTitle(search, offset):
 
     endpoint_request = requests.get(url=base_url, params=params)
     data = endpoint_request.json()
-    data_results = data["data"]["results"]
+    data_results = getJSONData(
+        "titleStartsWith", "https://gateway.marvel.com/v1/public/comics", search, offset
+    )
 
     # Returns the title, the on sale date of the comic, a link to an image of the comic, and a list of collaborators who worked on the comic.
     title = data_results[0]["title"]
@@ -59,8 +74,6 @@ def getComicByTitle(search, offset):
 
     for i in range(len(creators)):
         creatorList.append(data_results[0]["creators"]["items"][i]["name"])
-
-    print(data_results[0].keys())
 
     return (title, creatorList, onSaleDate, imgLink)
 
@@ -123,7 +136,6 @@ def getSeries(search, offset):
     titleList = []
     for i in range(len(data_results)):
         titleList.append(data_results[i]["title"])
-    print(titleList, next)
 
 
 def getCharacter(search, offset):
@@ -168,4 +180,4 @@ def getCreatorID(search):
     return data_results[0]["id"]
 
 
-print(getComicByTitle(search, 0))
+print(getComicByTitle(search, 1))
