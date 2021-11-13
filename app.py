@@ -204,8 +204,6 @@ def search():
             resultArr.append(title)
             resultArr2.append(imgLink)
 
-        print(resultArr)
-        print(resultArr2)
         return flask.render_template(
             "search.html", titles=resultArr, imgLinks=resultArr2
         )
