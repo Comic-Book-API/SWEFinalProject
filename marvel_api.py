@@ -27,7 +27,6 @@ hash.update(public_byte)
 hashhex = hash.hexdigest()
 
 urlAddOn = f"?ts={ts}&apikey={public_key}&hash={hashhex}"
-search = input("Enter in the name of a comic book: ")
 
 
 def getJSONData(searchField, url, search, offset):
@@ -63,6 +62,9 @@ def getComicByTitle(search, offset):
     for i in range(len(creators)):
         creatorList.append(data_results[0]["creators"]["items"][i]["name"])
 
+    returnArray = []
+    returnArray.append(title)
+    returnArray.append(onSaleDate)
     return (title, creatorList, onSaleDate, imgLink)
 
 
@@ -126,6 +128,3 @@ def getCreatorID(search):
         "nameStartsWith", "https://gateway.marvel.com/v1/public/creators", search
     )
     return data_results[0]["id"]
-
-
-print(getComicByTitle(search, 1))
