@@ -1,6 +1,11 @@
 import flask
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
+from sqlalchemy_utils import database_exists, create_database
 import os
+import getpass
 from dotenv import find_dotenv, load_dotenv
+from cryptography.fernet import Fernet
 
 app = flask.Flask(__name__)
 
@@ -146,7 +151,7 @@ def encode_string(id_list):
 
 # returns the UID of the given username.
 # returns -1 if the username doesn't exist in the database.
-get uid_by_username(username):
+def uid_by_username(username):
     acc = Account.query.filter_by(username=username).first()
     if acc is None:
         return -1
