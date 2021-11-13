@@ -179,5 +179,9 @@ def register():
 
     return flask.redirect("/") #change to login.html
 
+@app.route("/quiz")
+def quiz():
+    return flask.render_template("quiz.html")
+
 
 app.run()

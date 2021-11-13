@@ -1,12 +1,14 @@
 body {
     margin: 0;
-    /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
     font-family: "Comic Sans MS", cursive, sans-serif;
+    background-image: url("spiral-galaxy.png");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .top-nav {
     overflow: hidden;
-    background-color: crimson;
+    background-color: #311b92;
 }
 
 .top-nav a {
@@ -19,12 +21,13 @@ body {
 }
 
 .top-nav a:hover {
-    background-color: whitesmoke;
+    background-color: #3c22af;
     color: black;
 }
 
 .top-nav a.active {
-    background-color: darkgoldenrod;
+    background-color: #1b1149;
+    
     color: white;
 }
 
@@ -41,6 +44,8 @@ body {
 img {
     vertical-align: middle;
     border-radius: 15px;
+    box-shadow: 10px 10px 5px #717171;
+    opacity: 0.8;
 }
 
 /* hides the images by default */
@@ -81,14 +86,14 @@ img {
     height: 15px;
     width: 15px;
     margin: 0 2px;
-    background-color: #bbb;
+    background-color: rgb(100, 100, 100);
     border-radius: 50%;
     display: inline-block;
     transition: background-color 0.6s ease;
 }
 
 .active, .dot:hover {
-    background-color: #717171;
+    background-color: #9b9999;
 }
 
 /* fading animation */
@@ -111,4 +116,27 @@ img {
 
 @media only screen and (max-width: 300px) {
     .previous, .next {font-size: 11px;}
+}
+
+/* creates multiple columns in the home/main page */
+.history {
+    column-count: 3;
+    column-gap: 40px;
+}
+
+button {
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-size: 18px;
+    background-color: #448adb;
+    color: #fff;
+    border: 0px;
+    border-radius: 3px;
+    padding: 10px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+button:hover {
+    background-color: #6aafff;
+    transition: ease-in 0.5s;
 }
