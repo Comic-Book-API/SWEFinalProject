@@ -15,7 +15,7 @@ CRYPTOGRAPHY_KEY = os.getenv("CRYPTO_KEY").encode("UTF-8")
 encryption_engine = Fernet(CRYPTOGRAPHY_KEY)
 # database location
 
-engine = create_engine("postgres://hxbfjmfvfojzkv:f307f9122a40563211c43b4bbbf03e8ac9e8e2d3c0525aa3b1b462ee2ca48810@ec2-23-23-133-10.compute-1.amazonaws.com:5432/d9nffekjuq21dl")#("postgresql://localhost/tmp.db")
+engine = create_engine("postgresql://hxbfjmfvfojzkv:f307f9122a40563211c43b4bbbf03e8ac9e8e2d3c0525aa3b1b462ee2ca48810@ec2-23-23-133-10.compute-1.amazonaws.com:5432/d9nffekjuq21dl")#("postgresql://localhost/tmp.db")
 if not database_exists(engine.url):
     create_database(engine.url)
 
