@@ -52,7 +52,15 @@
                 </button>
             </form>
         </div>
-
-
+        <div>
+            {{titles}}
+            <div>
+                {% for i in titles %}
+                <li><h2>{{titles[loop.index0]}} </h2></li>
+                <br>
+                <li><img src="{{imgLinks[loop.index0]}}" height="512px" width="512px"/></li>
+                {% endfor %}
+            </div>
+        </div>
     </body>
 </html>
