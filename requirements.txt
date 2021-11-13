@@ -1,0 +1,4 @@
+Flask-SQLAlchemy==2.1
+psycopg2
+cryptography
+sqlalchemy-utils
