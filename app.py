@@ -204,8 +204,6 @@ def search():
             resultArr.append(title)
             resultArr2.append(imgLink)
 
-        print(resultArr)
-        print(resultArr2)
         return flask.render_template(
             "search.html", titles=resultArr, imgLinks=resultArr2
         )
@@ -236,4 +234,4 @@ def quiz():
     return flask.render_template("quiz.html")
 
 
-app.run()
+app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8080)))
