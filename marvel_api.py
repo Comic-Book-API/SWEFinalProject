@@ -56,7 +56,7 @@ def getComicByTitle(search, offset):
     creatorList = []
 
     # For the API, we have to change the link returned by the json or else it gives a permission denied error. To do this, we just append a string onto the end that Marvel has pre-defined. standard_fantastic is the version of the img we chose.
-    imgPath = data_results[0]["images"][0]["path"]
+    imgPath = data_results[0]["thumbnail"]["path"]
     imgLink = imgPath + "/standard_fantastic.jpg"
 
     for i in range(len(creators)):

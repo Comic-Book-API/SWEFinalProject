@@ -53,12 +53,15 @@
             </form>
         </div>
         <div>
-            {{titles}}
             <div>
                 {% for i in titles %}
                 <li><h2>{{titles[loop.index0]}} </h2></li>
                 <br>
+                {% if imgLinks[loop.index0] == "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg" %}
+                <img src = "/static/comic error message.png" height = "512px" width = "512px"/>
+                {% else %}
                 <li><img src="{{imgLinks[loop.index0]}}" height="512px" width="512px"/></li>
+                {% endif %}
                 {% endfor %}
             </div>
         </div>
