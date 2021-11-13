@@ -236,4 +236,4 @@ def quiz():
     return flask.render_template("quiz.html")
 
 
-app.run()
+app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8080)))
