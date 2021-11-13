@@ -196,12 +196,11 @@ def search():
     if flask.request.method == "POST":
         search = flask.request.form["search"]
         (title, creatorList, onSaleDate, imgLink) = marvel.getComicByTitle(search, 0)
+        print(imgLink)
         return flask.render_template(
             "search.html",
             title=title,
-            creatorList=creatorList,
-            onSaleDate=onSaleDate,
-            imLink=imgLink,
+            imgLink=imgLink,
         )
 
 
