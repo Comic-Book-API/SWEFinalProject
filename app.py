@@ -211,27 +211,43 @@ def search():
 
 @app.route("/")
 def index():
-    return flask.render_template("index.html")  # signup.html
+    return flask.render_template("index.html")  
+
+@app.route("/login")
+def signin():
+    return flask.render_template("login.html")
+
+@app.route("/login", methods=["POST"])
+def login():
+    username = flask.request.form.get("username")
+    password = flask.request.form.get("password")
+
+    # implement database to get it functional 
+
+    return flask.redirect("/")
 
 
 @app.route("/signup")
 def signup():
     return flask.render_template("signup.html")
 
-
 @app.route("/signup", methods=["POST"])
 def register():
     username = flask.request.form.get("username")
     password = flask.request.form.get("password")
 
-    # we just need database to continue
+    # we just need database to get it functional
 
-    return flask.redirect("/")  # change to login.html
+    return flask.redirect("/login")  
 
 
 @app.route("/quiz")
 def quiz():
     return flask.render_template("quiz.html")
+
+@app.route("/characters", methods=["POST", "GET"])
+def characters():
+    return flask.render_template("characters.html")
 
 
 app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8080)))

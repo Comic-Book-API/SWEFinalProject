@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<style>
+    body {
+        font-family: "Comic Sans MS", cursive, sans-serif;
+        font-weight: bolder;
+        content: "";
+        background-image: url("/static/login.png");
+        background-repeat: no-repeat;
+        position: relative;
+        background-size: cover;
+        height: 50%;
+        flex: auto;
+
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    input[type=text],
+    input[type=password] {
+        width: 100%;
+        padding: 15px;
+        margin: 5px 0 22px 0;
+        display: inline-block;
+        border: none;
+        background-color: #f1f1f1;
+    }
+
+    input[type=text]:focus,
+    input[type=password]:focus {
+        background-color: #ddd;
+        outline: none;
+    }
+
+    button {
+        background-color: crimson;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        opacity: 0.9;
+    }
+
+    button:hover {
+        opacity: 1;
+    }
+
+    .signin_button {
+        float: left;
+        width: 50%;
+    }
+
+    .container {
+        padding: 16px;
+    }
+
+    .clearfix::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    section {
+        display: -webkit-flex;
+        display: flex;
+        padding-left: 20px;
+    }
+
+    img {
+        float: right;
+        background-image: url("/static/comic-book-art.jpeg");
+        height: 50%;
+        background-position: right;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    @media (max-width: 800px) {
+        section {
+            -webkit-flex-direction: column;
+            flex-direction: column;
+        }
+    }
+
+    @media screen and (max-width: 300px) {
+        .signin_button {
+            width: 100%;
+        }
+    }
+</style>
+
+<head>
+    <title> Let's Sign Into Your Account! </title>
+    <link rel="icon" href="/static/comic-icon-png-2.png">
+</head>
+
+<body>
+    <h1> Sign In! </h1>
+    <p> Please fill in this form to sign in. </p>
+    <br><br>
+    <section>
+
+        <form method="POST" action="/login">
+            <label for="username"> User Name: </label><br>
+            <input type="text" id="username" placeholder="Enter Username.." name="username" required><br>
+
+            <label for="password"> Password: </label><br>
+            <input type="password" id="password" placeholder="Enter Password.." name="password" required><br>
+            <div>
+                <button type="submit" class="signin_button"> Sign In </button>
+                <br><br>
+                <h3> Don't have an account with us? <a href="/signup"> Click Here! </a></h3>
+            </div>
+        </form>
+    </section>
+</body>
+</html>
