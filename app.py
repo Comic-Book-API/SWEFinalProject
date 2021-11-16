@@ -285,4 +285,9 @@ def sign_in():
                 flask.flask_login.login_user(user)
 
 
+@app.route("/characters", methods=["POST", "GET"])
+def characters():
+    return flask.render_template("characters.html")
+
+
 app.run()
