@@ -5,3 +5,4 @@ sqlalchemy-utils
 python-dotenv
 requests
 Flask
+flask_login
