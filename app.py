@@ -305,4 +305,5 @@ def characters():
     return flask.render_template("characters.html")
 
 
-app.run()
+
+app.run(host='0.0.0.0',port=os.getenv("PORT", 8080),use_reloader=True)
