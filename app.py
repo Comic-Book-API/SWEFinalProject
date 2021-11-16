@@ -85,7 +85,7 @@ def encrypt(word):
     hash = hash.decode("UTF-8")
     return hash
 
-
+# decrypts the given hash, returning the strign which was originally encrypted
 def decrypt(hash):
     hash = hash.encode("UTF-8")
     word = encryption_engine.decrypt(hash)
@@ -188,7 +188,7 @@ def get_comic(uid, comic_index):
     comics = decode_string(get_account_db_comics(uid))
     return comics[comic_index]
 
-
+# encodes a string for storage in the database
 def encode_string(id_list):
     ids_str = ""
     for id in id_list:
@@ -207,16 +207,17 @@ def uid_by_username(username):
     else:
         return acc.uid
 
-
+# returns the account object associated with the given UID
 def get_account_db_entry(uid):
     acc = Account.query.filter_by(uid=uid).first()
     return acc
 
-
+# returns the stored comics, will need to be decoded
 def get_account_db_comics(uid):
     return get_account_db_entry(uid).comics
 
 
+# returns the stored characters, will need to be decoded
 def get_account_db_characters(uid):
     return get_account_db_entry(uid).characters
 
