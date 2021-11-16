@@ -221,6 +221,21 @@ def get_account_db_characters(uid):
     return get_account_db_entry(uid).characters
 
 
+@app.route("/login")
+def signin():
+    return flask.render_template("login.html")
+
+
+@app.route("/login", methods=["POST"])
+def login():
+    username = flask.request.form.get("username")
+    password = flask.request.form.get("password")
+
+    # implement database to get it functional
+
+    return flask.redirect("/")
+
+
 @app.route("/search", methods=["POST", "GET"])
 def search():
     if flask.request.method == "GET":
