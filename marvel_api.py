@@ -49,6 +49,9 @@ def getComicByTitle(search, offset):
         "titleStartsWith", "https://gateway.marvel.com/v1/public/comics", search, offset
     )
 
+    # Catch out of bounds error
+    if len(data_results) == 0:
+        return False
     # Returns the title, the on sale date of the comic, a link to an image of the comic, and a list of collaborators who worked on the comic.
     title = data_results[0]["title"]
     onSaleDate = data_results[0]["dates"][0]["date"]
@@ -111,7 +114,8 @@ def getCharacter(search, offset):
         search,
         offset,
     )
-
+    if len(data_results) == 0:
+        return False
     name = data_results[0]["name"]
     description = data_results[0]["description"]
     id = data_results[0]["id"]
