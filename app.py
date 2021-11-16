@@ -305,6 +305,13 @@ def sign_in():
 def characters():
     return flask.render_template("characters.html")
 
+@app.route("/comicInfo", methods=["POST", "GET"])
+def comicInfo():
+    return flask.render_template("comicInfo.html")
+
+@app.route("/characterInfo", methods=["POST", "GET"])
+def characterInfo():
+    return flask.render_template("characterInfo.html")
 
 
 app.run(host='0.0.0.0',port=os.getenv("PORT", 8080),use_reloader=True)
