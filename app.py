@@ -68,7 +68,7 @@ class Account(db.Model):
 # Login functions
 @login_manager.user_loader
 def user_loader(username):
-    user = Account.query.get(username)
+    user = Account.query.get(uid_by_username(username))
     if user:
         return user
     else:
