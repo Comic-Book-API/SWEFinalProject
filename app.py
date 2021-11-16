@@ -6,11 +6,12 @@ import os
 import getpass
 from dotenv import find_dotenv, load_dotenv
 from cryptography.fernet import Fernet
-from flask_login import LoginManager
+from flask_login import LoginManager, login_user
+import flask_login
 import marvel_api as marvel
 
 app = flask.Flask(__name__)
-
+app.secret_key = "this is the most secretive key in the universe!!!"
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -56,7 +57,7 @@ class Account(db.Model):
         return True
 
     def get_id(self):
-        return self.id
+        return self.uid
 
     def is_authenticated(self):
         return self.authenticated
@@ -222,21 +223,6 @@ def get_account_db_characters(uid):
     return get_account_db_entry(uid).characters
 
 
-@app.route("/login")
-def signin():
-    return flask.render_template("login.html")
-
-
-@app.route("/login", methods=["POST"])
-def login():
-    username = flask.request.form.get("username")
-    password = flask.request.form.get("password")
-
-    # implement database to get it functional
-
-    return flask.redirect("/")
-
-
 @app.route("/search", methods=["POST", "GET"])
 def search():
     if flask.request.method == "GET":
@@ -276,7 +262,13 @@ def signup():
 @app.route("/signup", methods=["POST"])
 def register():
     username = flask.request.form.get("username")
-    password = flask.request.form.get("password")
+    password = encrypt(flask.request.form.get("password"))
+    if add_account(username, password) == -1:
+        flask.flash("That username is taken!")
+        return flask.redirect("/signup")
+    else:
+        add_account(username, password)
+        flask.flash("Sucessful signup!")
 
     # we just need database to continue
 
@@ -288,17 +280,25 @@ def quiz():
     return flask.render_template("quiz.html")
 
 
-# Example signin logic:
-@app.route("/asdf", methods=["POST", "GET"])
+@app.route("/login", methods=["POST", "GET"])
 def sign_in():
     if flask.request.method == "POST":
         username = flask.request.form.get("username")
-        password = encrypt(flask.request.form.get("password"))
-        user = Account.query.filter_by(username=username)
+        password = flask.request.form.get("password")
+        user = Account.query.filter_by(username=username).first()
         if user:
-            if password == user.password:
+            if password == decrypt(user.password):
                 user.authenticated = True
-                flask.flask_login.login_user(user)
+                flask_login.login_user(user)
+                flask.flash("Successfully logged in!")
+                return flask.redirect("/")
+            else:
+                flask.flash("Incorrect username/password!")
+                return flask.redirect("/login")
+        else:
+            flask.flash("Incorrect username/password!")
+            return flask.redirect("/login")
+    return flask.render_template("login.html")
 
 
 @app.route("/characters", methods=["POST", "GET"])
