@@ -70,20 +70,47 @@
                 padding-left: 16px;
                 padding-bottom: 16px;
             }
+            .top-nav {
+                overflow: hidden;
+                background-color: #311b92;
+            }
+
+            .top-nav a {
+                float: left;
+                color: #f2f2f2;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                font-size: 17px;
+            }
+
+            .top-nav a:hover {
+                background-color: #3c22af;
+                color: black;
+            }
+
+            .top-nav a.active {
+                background-color: #1b1149;
+                
+                color: white;
+            }
         </style>
 
     </head>
     <body>
         <div>
-
-            <div class="padding">
-              <button onclick="window.location.href='/'" class="placement"> Home </button>  
+            <div class="top-nav">
+                <a class="active" href="/"> Home </a>
+                <a href="/signup"> Log In </a>
+                <!-- change link to login.html -->
+                <a href="/search"> Search </a>
             </div>
+
             <div>
-                <form action = "/search">
-                    <input type="radio" id="option1" name="option1">
+                <form method = "POST" action = "/filter">
+                    <input type="radio" id="option1" name="option" value = "comics" checked = "checked"> </input>
                     <label for="option1"> Comics </label>
-                    <input type="radio" id="option2" name="option2">
+                    <input type="radio" id="option2" name="option" value = "characters"> </input>
                     <label for="option2"> Characters </label>
                     <input class ="placement" type="submit" value="Submit">
                 </form>
@@ -98,7 +125,6 @@
          
         </div>
         <div class="center">
-            <!-- {{titles}} -->
             <div >
                 {% for i in titles %}
                 <li><h2>{{titles[loop.index0]}} </h2></li>

@@ -241,6 +241,12 @@ def search():
         )
 
 
+@app.route("/filter", methods=["POST"])
+def setFilter():
+    choice = flask.request.form["option"]
+    return flask.redirect(flask.url_for("search", choice=choice))
+
+
 @app.route("/")
 def index():
     return flask.render_template("index.html")  # signup.html
