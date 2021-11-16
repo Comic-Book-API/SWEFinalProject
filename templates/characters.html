@@ -98,6 +98,15 @@
 
     </head>
     <body>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class = flashe>
+            {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% endwith %}
         <div>
             <div class="top-nav">
                 <a class="active" href="/"> Home </a>
@@ -118,7 +127,7 @@
         <div class="center">
             <div >
                 {% for i in titles %}
-                <li><h2>{{titles[loop.index0]}} </h2></li>
+                <a href = "/characterinfo" ><li><h2>{{titles[loop.index0]}} </h2></li> </a>
                 <br>
                 <li><img src="{{imgLinks[loop.index0]}}" height="512px" width="512px"/></li>
                 {% endfor %}
