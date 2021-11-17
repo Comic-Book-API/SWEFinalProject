@@ -68,16 +68,12 @@ class Account(db.Model):
 
 # Login functions
 @login_manager.user_loader
-def user_loader(username):
-    pass
-
-
-# def user_loader(username):
-#     user = Account.query.get(uid_by_username(username))
-#     if user:
-#         return user
-#     else:
-#         return None
+def user_loader(uid):
+    user = Account.query.filter_by(uid=uid).first()
+    if user:
+        return user
+    else:
+        return None
 
 
 db.create_all()
