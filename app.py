@@ -10,6 +10,7 @@ from flask_login import LoginManager, login_user
 import flask_login
 import marvel_api as marvel
 
+
 app = flask.Flask(__name__)
 app.secret_key = "this is the most secretive key in the universe!!!"
 
@@ -69,19 +70,16 @@ class Account(db.Model):
 # Login functions
 @login_manager.user_loader
 def user_loader(username):
-    pass
-
-
-# def user_loader(username):
-#     user = Account.query.get(uid_by_username(username))
-#     if user:
-#         return user
-#     else:
-#         return None
+    user = Account.query.get(uid_by_username(username))
+    if user:
+        return user
+    else:
+        return None
 
 
 db.create_all()
 db.session.commit()
+
 
 # returns encrypted hash
 def encrypt(word):
@@ -90,8 +88,7 @@ def encrypt(word):
     hash = hash.decode("UTF-8")
     return hash
 
-
-# decrypts the given hash, returning the strign which was originally encrypted
+# decrypts the given hash, returning the string which was originally encrypted
 def decrypt(hash):
     hash = hash.encode("UTF-8")
     word = encryption_engine.decrypt(hash)
@@ -138,7 +135,8 @@ def remove_character(uid, character_id):
 
 
 # adds comic from the comics entry for the given user
-# returns 0 if successful, -1 if the entry could not be added because the max has been reached, and -2 if the entry is already present
+# returns 0 if successful, -1 if the entry could not be added because the max has been reached,
+# and -2 if the entry is already present
 def add_comic(uid, comic_id):
     comics = decode_string(get_account_db_comics(uid))
     if len(comics) >= 20:
@@ -146,16 +144,17 @@ def add_comic(uid, comic_id):
     if comics.count(comic_id) > 0:
         return -2
     comics.append(comic_id)
+    print(comics)
     get_account_db_entry(uid).comics = encode_string(comics)
     db.session.commit()
     return 0
 
 
 # adds character from the character entry for the given user
-# returns 0 if successful, -1 if the entry could not be added because the max has been reached, and -2 if the entry is already present
+# returns 0 if successful, -1 if the entry could not be added because the max has been reached,
+# and -2 if the entry is already present
 def add_character(uid, character_id):
     characters = decode_string(get_account_db_characters(uid))
-
     if len(characters) >= 20:
         return -1
     if characters.count(character_id) > 0:
@@ -189,7 +188,7 @@ def get_character(uid, character_index):
     return characters[character_index]
 
 
-# returns the comci at the given index
+# returns the comic at the given index
 def get_comic(uid, comic_index):
     comics = decode_string(get_account_db_comics(uid))
     return comics[comic_index]
@@ -197,11 +196,7 @@ def get_comic(uid, comic_index):
 
 # encodes a string for storage in the database
 def encode_string(id_list):
-    ids_str = ""
-    for id in id_list:
-        if len(ids_str) != 0:
-            ids_str += ";"
-        ids_str += id
+    ids_str = ';'.join(id_list)
     return ids_str
 
 
@@ -237,35 +232,18 @@ def search():
         return flask.render_template("search.html")
     if flask.request.method == "POST":
         search = flask.request.form["search"]
-        imgUnavailable = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg"
         resultArr = []
         resultArr2 = []
         for i in range(10):
-            if marvel.getComicByTitle(search, i) != False:
-                (title, creatorList, onSaleDate, imgLink) = marvel.getComicByTitle(
-                    search, i
-                )
-                if imgLink == imgUnavailable:
-                    imgLink = "/static/comic error message.png"
-                resultArr.append(title)
-                resultArr2.append(imgLink)
-
-        if len(resultArr) == 0:
-            flask.flash("Bad search parameters, please try again!")
+            (title, creatorList, onSaleDate, imgLink) = marvel.getComicByTitle(
+                search, i
+            )
+            resultArr.append(title)
+            resultArr2.append(imgLink)
 
         return flask.render_template(
             "search.html", titles=resultArr, imgLinks=resultArr2
         )
-
-
-@app.route("/characterinfo", methods=["POST", "GET"])
-def characterinfo():
-    return flask.render_template("characterInfo.html")
-
-
-@app.route("/comicinfo", methods=["POST", "GET"])
-def comicinfo():
-    return flask.render_template("comicInfo.html")
 
 
 @app.route("/filter", methods=["POST"])
@@ -328,38 +306,17 @@ def sign_in():
 
 @app.route("/characters", methods=["POST", "GET"])
 def characters():
-    if flask.request.method == "GET":
-        return flask.render_template("characters.html")
-    if flask.request.method == "POST":
-        search = flask.request.form["search"]
-        resultArr = []
-        resultArr2 = []
-        for i in range(10):
-            if marvel.getCharacter(search, i) != False:
-                (id, name, description, imgLink) = marvel.getCharacter(search, i)
-                if (
-                    imgLink
-                    == "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg"
-                ):
-                    imgLink = "/static/comic error message.png"
-                resultArr.append(name)
-                resultArr2.append(imgLink)
-        if len(resultArr) == 0:
-            flask.flash("Bad search parameters, please try again!")
-        return flask.render_template(
-            "characters.html", titles=resultArr, imgLinks=resultArr2
-        )
     return flask.render_template("characters.html")
 
 
 @app.route("/comicInfo", methods=["POST", "GET"])
-def comicInfo():
+def comic_info():
     return flask.render_template("comicInfo.html")
 
 
 @app.route("/characterInfo", methods=["POST", "GET"])
-def characterInfo():
+def character_info():
     return flask.render_template("characterInfo.html")
 
 
-app.run(host="0.0.0.0", port=os.getenv("PORT", 8080), use_reloader=True)
+app.run(host='0.0.0.0',port=os.getenv("PORT", 8080),use_reloader=True)
