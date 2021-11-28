@@ -1,153 +1,162 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title> Super Quiz </title>
-        <link rel="icon" href="/static/comic-icon-png-2.png">
-       
 
-        <style>
-            body {
-                margin: 0;
-                font-family: "Comic Sans MS", cursive, sans-serif;
-                font-weight: 300;
-                text-align: center;
-                background-image: url("/static/spiral-galaxy.png");
-                background-repeat: no-repeat;
-                background-size: cover;
-            }
-            h2 {
-                font-weight: 300;
-                margin: 0px;
-                padding: 10px;
-                font-size: 20px;
-                background-color: #291749;
-                color: #fff;
-            }
-            .question {
-                font-size: 30px;
-                margin-bottom: 10px;
-            }
-            .answers {
-                margin-bottom: 20px;
-                text-align: left;
-                display: inline-block;
-            }
-            .answers label {
-                display: block;
-                margin-bottom: 10px;
-            }
-            button {
-                font-family: "Comic Sans MS", cursive, sans-serif;
-                font-size: 22px;
-                background-color: #291749;
-                color: #fff;
-                border: 0px;
-                border-radius: 3px;
-                padding: 20px;
-                cursor: pointer;
-                margin-bottom: 20px;
-            }
-            button:hover {
-                background-color: #482980;
-                transition: ease-in 0.5s;
-            }
-            .slide {
-                position: absolute;
-                left: 0px;
-                top: 0px;
-                width: 100%;
-                z-index: 1;
-                opacity: 0;
-                transition: opacity 0.5s;
-            }
-            .active-slide{
-                opacity: 1;
-                z-index: 2;
-            }
-            .quiz-container {
-                position: relative;
-                height: 200px;
-                margin-top: 40px;
-            }
+<head>
+    <title> Super Quiz </title>
+    <link rel="icon" href="/static/comic-icon-png-2.png">
 
-        </style>
-    </head>
 
-    <body>
-        <h2> The Super Quiz</h2>
-        <div class="quiz-container">
-            <div id="quiz"></div>
-        </div>
-        <br><br><br>
-        <button id="prev"> Previous </button>
-        <button id="next"> Next </button>
-        <button id="submit"> Submit </button>
-        <br>
-        <button onclick="window.location.href='/'"> Home </button>
-        <div id="results"></div>
-        <script>
-            (function(){
-                function buildQuiz(){
+    <style>
+        body {
+            margin: 0;
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            font-weight: 300;
+            text-align: center;
+            background-image: url("/static/spiral-galaxy.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        h2 {
+            font-weight: 300;
+            margin: 0px;
+            padding: 10px;
+            font-size: 20px;
+            background-color: #291749;
+            color: #fff;
+        }
+
+        .question {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .answers {
+            margin-bottom: 20px;
+            text-align: left;
+            display: inline-block;
+        }
+
+        .answers label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        button {
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            font-size: 22px;
+            background-color: #291749;
+            color: #fff;
+            border: 0px;
+            border-radius: 3px;
+            padding: 20px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        button:hover {
+            background-color: #482980;
+            transition: ease-in 0.5s;
+        }
+
+        .slide {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .active-slide {
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .quiz-container {
+            position: relative;
+            height: 200px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2> The Super Quiz</h2>
+    <div class="quiz-container">
+        <div id="quiz"></div>
+    </div>
+    <br><br><br>
+    <button id="prev"> Previous </button>
+    <button id="next"> Next </button>
+    <button id="submit"> Submit </button>
+    <br>
+    <button onclick="window.location.href='/'"> Home </button>
+    <div id="results"></div>
+    <script>
+        (function () {
+            function buildQuiz() {
 
                 const output = [];
 
                 //goes through all of the questions
                 quizQuestions.forEach(
-                (curr_question, question_num) => {
+                    (curr_question, question_num) => {
 
-                    //variable to store the list all of the possible answers
-                    const answers = [];
+                        //variable to store the list all of the possible answers
+                        const answers = [];
 
-                    for(letter in curr_question.answers){
+                        for (letter in curr_question.answers) {
 
-                    //HTML radio button
-                    answers.push(
-                        `<label>
+                            //HTML radio button
+                            answers.push(
+                                `<label>
                         <input type="radio" name="question${question_num}" value="${letter}">
                         ${letter} :
                         ${curr_question.answers[letter]}
                         </label>`
-                    );
-                    }
+                            );
+                        }
 
-                    //add this question and its answers to the output
-                    output.push(
-                    `<div class="slide">
+                        //add this question and its answers to the output
+                        output.push(
+                            `<div class="slide">
                         <div class="question"> ${curr_question.question} </div>
                         <div class="answers"> ${answers.join("")} </div>
                     </div>`
-                    );
-                }
+                        );
+                    }
                 );
 
                 //finally combine the output list into one string of HTML and outputs it on the page
                 quiz_box.innerHTML = output.join('');
             }
 
-            function results(){
+            function results() {
 
                 const answer_box = quiz_box.querySelectorAll('.answers');
 
                 //keep track of user's correct answers
                 let correct_answers = 0;
 
-                quizQuestions.forEach( (curr_question, question_num) => {
+                quizQuestions.forEach((curr_question, question_num) => {
 
-                //gets the selected answer from user
-                const answer_section_box = answer_box[question_num];
-                const select = `input[name=question${question_num}]:checked`;
-                const users_answer_choice = (answer_section_box.querySelector(select) || {}).value;
+                    //gets the selected answer from user
+                    const answer_section_box = answer_box[question_num];
+                    const select = `input[name=question${question_num}]:checked`;
+                    const users_answer_choice = (answer_section_box.querySelector(select) || {}).value;
 
-                //if answer is correct, the color will turn green
-                if(users_answer_choice === curr_question.correctAnswer){
-                    //updates the num of correct ans
-                    correct_answers++;
-                    answer_box[question_num].style.color = 'lightgreen';
-                }
-                // if answer is wrong/blank
-                else{
-                    answer_box[question_num].style.color = 'red';
-                }
+                    //if answer is correct, the color will turn green
+                    if (users_answer_choice === curr_question.correctAnswer) {
+                        //updates the num of correct ans
+                        correct_answers++;
+                        answer_box[question_num].style.color = 'lightgreen';
+                    }
+                    // if answer is wrong/blank
+                    else {
+                        answer_box[question_num].style.color = 'red';
+                    }
                 });
 
                 //shows the number of correct answeers
@@ -158,19 +167,19 @@
                 slides[currentSlide].classList.remove('active-slide');
                 slides[n].classList.add('active-slide');
                 currentSlide = n;
-                if(currentSlide === 0){
-                prev_button.style.display = 'none';
+                if (currentSlide === 0) {
+                    prev_button.style.display = 'none';
                 }
-                else{
-                prev_button.style.display = 'inline-block';
+                else {
+                    prev_button.style.display = 'inline-block';
                 }
-                if(currentSlide === slides.length-1){
-                next_button.style.display = 'none';
-                submit_button.style.display = 'inline-block';
+                if (currentSlide === slides.length - 1) {
+                    next_button.style.display = 'none';
+                    submit_button.style.display = 'inline-block';
                 }
-                else{
-                next_button.style.display = 'inline-block';
-                submit_button.style.display = 'none';
+                else {
+                    next_button.style.display = 'inline-block';
+                    submit_button.style.display = 'none';
                 }
             }
 
@@ -187,106 +196,106 @@
             const submit_button = document.getElementById('submit');
             const quizQuestions = [
                 {
-                question: "Which of these is NOT a type of infinity stone?",
-                answers: {
-                    a: "Mind",
-                    b: "Reality",
-                    c: "Space",
-                    d: "Heart",
-                    e: "Time",
-                    f: "Power"
-                },
-                correctAnswer: "d"
-                },
-                {
-                question: "What was Stan Lee's signature exclamation word?",
-                answers: {
-                    a: "Shazam!",
-                    b: "Hazzah!",
-                    c: "Excelsior!",
-                    d: "Jinkies!"
-                },
-                correctAnswer: "c"
+                    question: "Which of these is NOT a type of infinity stone?",
+                    answers: {
+                        a: "Mind",
+                        b: "Reality",
+                        c: "Space",
+                        d: "Heart",
+                        e: "Time",
+                        f: "Power"
+                    },
+                    correctAnswer: "d"
                 },
                 {
-                question: "Who is the wealthiest character in the Marvel Universe?",
-                answers: {
-                    a: "Thor",
-                    b: "Black Panther",
-                    c: "Nick Fury",
-                    d: "Tony Stark"
-                },
-                correctAnswer: "b"
-                },
-                {
-                question: "Who is the doctor that is Thor's love interest and, in the comics, eventually picks up Mjolnir and is worthy enough to be the New Thor?",
-                answers: {
-                    a: "Diana Prince",
-                    b: "Pepper Potts",
-                    c: "Jane Foster",
-                    d: "Natasha Romanova"
-                },
-                correctAnswer: "c"
+                    question: "What was Stan Lee's signature exclamation word?",
+                    answers: {
+                        a: "Shazam!",
+                        b: "Hazzah!",
+                        c: "Excelsior!",
+                        d: "Jinkies!"
+                    },
+                    correctAnswer: "c"
                 },
                 {
-                question: "What food do The Avengers all go eat after their battle for New York in the first Avengers movie?",
-                answers: {
-                    a: "Pizza",
-                    b: "Gyros",
-                    c: "Shawarma",
-                    d: "Spaghetti"
-                },
-                correctAnswer: "c"
-                },
-                {
-                question: "What is the fictional country whose capital city is used as a weapon against humanity in Avengers: Age of Ultron?",
-                answers: {
-                    a: "Sokovia",
-                    b: "Genovia",
-                    c: "Hogsmede",
-                    d: "Arendelle"
-                },
-                correctAnswer: "a"
+                    question: "Who is the wealthiest character in the Marvel Universe?",
+                    answers: {
+                        a: "Thor",
+                        b: "Black Panther",
+                        c: "Nick Fury",
+                        d: "Tony Stark"
+                    },
+                    correctAnswer: "b"
                 },
                 {
-                question: "What necklace does Peter buy for M.J. in Spider-Man: Far From Home?",
-                answers: {
-                    a: "A black sunflower necklace",
-                    b: "A Saint Christopher necklace",
-                    c: "An NYC skyline necklace",
-                    d: "A black dahlia necklace"
-                },
-                correctAnswer: "d"
-                },
-                {
-                question: "What is Loki's title?",
-                answers: {
-                    a: "God of Mischief",
-                    b: "God of Pranks",
-                    c: "God of Evil",
-                    d: "God of Tricks"
-                },
-                correctAnswer: "a"
+                    question: "Who is the doctor that is Thor's love interest and, in the comics, eventually picks up Mjolnir and is worthy enough to be the New Thor?",
+                    answers: {
+                        a: "Diana Prince",
+                        b: "Pepper Potts",
+                        c: "Jane Foster",
+                        d: "Natasha Romanova"
+                    },
+                    correctAnswer: "c"
                 },
                 {
-                question: "What does the S in S.H.I.E.L.D. stand for?",
-                answers: {
-                    a: "Supreme",
-                    b: "Strategic",
-                    c: "State",
-                    d: "Special"
-                },
-                correctAnswer: "b"
+                    question: "What food do The Avengers all go eat after their battle for New York in the first Avengers movie?",
+                    answers: {
+                        a: "Pizza",
+                        b: "Gyros",
+                        c: "Shawarma",
+                        d: "Spaghetti"
+                    },
+                    correctAnswer: "c"
                 },
                 {
-                question: "What type of radiation caused Bruce Banner to become the Hulk?",
-                answers: {
-                    a: "Alpha Rays",
-                    b: "Neutron Rays",
-                    c: "Beta Rays",
-                    d: "Gamma Rays"
+                    question: "What is the fictional country whose capital city is used as a weapon against humanity in Avengers: Age of Ultron?",
+                    answers: {
+                        a: "Sokovia",
+                        b: "Genovia",
+                        c: "Hogsmede",
+                        d: "Arendelle"
+                    },
+                    correctAnswer: "a"
                 },
-                correctAnswer: "d"
+                {
+                    question: "What necklace does Peter buy for M.J. in Spider-Man: Far From Home?",
+                    answers: {
+                        a: "A black sunflower necklace",
+                        b: "A Saint Christopher necklace",
+                        c: "An NYC skyline necklace",
+                        d: "A black dahlia necklace"
+                    },
+                    correctAnswer: "d"
+                },
+                {
+                    question: "What is Loki's title?",
+                    answers: {
+                        a: "God of Mischief",
+                        b: "God of Pranks",
+                        c: "God of Evil",
+                        d: "God of Tricks"
+                    },
+                    correctAnswer: "a"
+                },
+                {
+                    question: "What does the S in S.H.I.E.L.D. stand for?",
+                    answers: {
+                        a: "Supreme",
+                        b: "Strategic",
+                        c: "State",
+                        d: "Special"
+                    },
+                    correctAnswer: "b"
+                },
+                {
+                    question: "What type of radiation caused Bruce Banner to become the Hulk?",
+                    answers: {
+                        a: "Alpha Rays",
+                        b: "Neutron Rays",
+                        c: "Beta Rays",
+                        d: "Gamma Rays"
+                    },
+                    correctAnswer: "d"
                 }
             ];
 
@@ -306,9 +315,10 @@
             submit_button.addEventListener('click', results);
             prev_button.addEventListener("click", previousSlide);
             next_button.addEventListener("click", nextSlide);
-            })();
+        })();
 
-        </script>
-        
-    </body>
+    </script>
+
+</body>
+
 </html>

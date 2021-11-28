@@ -86,6 +86,7 @@ def encrypt(word):
     hash = hash.decode("UTF-8")
     return hash
 
+
 # decrypts the given hash, returning the strign which was originally encrypted
 def decrypt(hash):
     hash = hash.encode("UTF-8")
@@ -189,6 +190,7 @@ def get_comic(uid, comic_index):
     comics = decode_string(get_account_db_comics(uid))
     return comics[comic_index]
 
+
 # encodes a string for storage in the database
 def encode_string(id_list):
     ids_str = ""
@@ -208,10 +210,12 @@ def uid_by_username(username):
     else:
         return acc.uid
 
+
 # returns the account object associated with the given UID
 def get_account_db_entry(uid):
     acc = Account.query.filter_by(uid=uid).first()
     return acc
+
 
 # returns the stored comics, will need to be decoded
 def get_account_db_comics(uid):
@@ -251,7 +255,7 @@ def setFilter():
 
 @app.route("/")
 def index():
-    return flask.render_template("index.html")  # signup.html
+    return flask.render_template("index.html")
 
 
 @app.route("/signup")
@@ -269,10 +273,7 @@ def register():
     else:
         add_account(username, password)
         flask.flash("Sucessful signup!")
-
-    # we just need database to continue
-
-    return flask.redirect("/")  # change to login.html
+    return flask.redirect("/login")
 
 
 @app.route("/quiz")
@@ -305,6 +306,9 @@ def sign_in():
 def characters():
     return flask.render_template("characters.html")
 
+@app.route("/about")
+def about():
+    return flask.render_template("landingPage.html")
 
 
-app.run(host='0.0.0.0',port=os.getenv("PORT", 8080),use_reloader=True)
+app.run(host="0.0.0.0", port=os.getenv("PORT", 8080), use_reloader=True)
