@@ -137,13 +137,19 @@
 
         <div>
             <!-- pass data here -->
-
+            <script src = "/static/script.js"></script> 
             <form method="POST" action="/comicInfo">
                 <div>
                     <button type="submit" class="favorite_button"> Favorite </button>
                 </div>
             </form>
+               <h1> <div id = "title"></div> </h1> 
+
+                <script>
+                    var title = getCookie();
+                    document.getElementById('title').textContent = title;
+                </script>
         </div>
-        <div><h1>Page will soon be populated</h1></div>
+        <div><h1></h1></div>
     </body>
 </html>

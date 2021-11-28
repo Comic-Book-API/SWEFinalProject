@@ -57,6 +57,7 @@ def getComicByTitle(search, offset):
     onSaleDate = data_results[0]["dates"][0]["date"]
     creators = data_results[0]["creators"]["items"]
     creatorList = []
+    buyLink = data_results[0]["urls"]
 
     # For the API, we have to change the link returned by the json or else it gives a permission denied error. To do this, we just append a string onto the end that Marvel has pre-defined. standard_fantastic is the version of the img we chose.
     imgPath = data_results[0]["thumbnail"]["path"]
@@ -68,7 +69,7 @@ def getComicByTitle(search, offset):
     returnArray = []
     returnArray.append(title)
     returnArray.append(onSaleDate)
-    return (title, creatorList, onSaleDate, imgLink)
+    return (title, creatorList, onSaleDate, imgLink, buyLink)
 
 
 def getComicByCharacter(search, offset):

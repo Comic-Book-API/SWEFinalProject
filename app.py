@@ -70,14 +70,11 @@ class Account(db.Model):
 @login_manager.user_loader
 def user_loader(username):
     pass
-
-
-# def user_loader(username):
-#     user = Account.query.get(uid_by_username(username))
-#     if user:
-#         return user
-#     else:
-#         return None
+    # user = Account.query.filter_by(username=username).first()
+    # if user:
+    #     return user
+    # else:
+    #     return None
 
 
 db.create_all()
@@ -242,9 +239,13 @@ def search():
         resultArr2 = []
         for i in range(10):
             if marvel.getComicByTitle(search, i) != False:
-                (title, creatorList, onSaleDate, imgLink) = marvel.getComicByTitle(
-                    search, i
-                )
+                (
+                    title,
+                    creatorList,
+                    onSaleDate,
+                    imgLink,
+                    buyLink,
+                ) = marvel.getComicByTitle(search, i)
                 if imgLink == imgUnavailable:
                     imgLink = "/static/comic error message.png"
                 resultArr.append(title)
@@ -311,9 +312,11 @@ def sign_in():
         username = flask.request.form.get("username")
         password = flask.request.form.get("password")
         user = Account.query.filter_by(username=username).first()
+        print(username)
         if user:
             if password == decrypt(user.password):
                 user.authenticated = True
+                print(user)
                 flask_login.login_user(user)
                 flask.flash("Successfully logged in!")
                 return flask.redirect("/")
