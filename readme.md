@@ -1,5 +1,8 @@
 Super Cool Comics Project:
+Sprint one link:
 https://lit-tundra-86808.herokuapp.com/
+Sprint two link:
+https://domino-pizza-rocketlauncher.herokuapp.com/
 
 For our class project, we created a web applicaton, that allows user to use basic functionality such as, creating an account, logging into their account, and adding their favorite characters and comics underneath their username.
 
