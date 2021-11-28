@@ -6,7 +6,7 @@ import os
 import getpass
 from dotenv import find_dotenv, load_dotenv
 from cryptography.fernet import Fernet
-from flask_login import LoginManager, login_user
+from flask_login import LoginManager, login_user, login_required
 import flask_login
 import marvel_api as marvel
 
@@ -225,6 +225,12 @@ def get_account_db_comics(uid):
 # returns the stored characters, will need to be decoded
 def get_account_db_characters(uid):
     return get_account_db_entry(uid).characters
+
+@app.route("/logout")
+@login_required
+def logout():
+    flask_login.logout_user()
+    return flask.render_template("logout.html")
 
 
 @app.route("/search", methods=["POST", "GET"])
