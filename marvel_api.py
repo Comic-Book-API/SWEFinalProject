@@ -13,9 +13,9 @@ load_dotenv(find_dotenv())
 public_key = os.getenv("marvel_public_key")
 private_key = os.getenv("marvel_private_key")
 
-hash = hashlib.md5()
-
-# The Marvel API requires servers to have parameters before accessing them. The paramaters are: a timestamp (ts), the public api key, and a hash with the md5 algorithm of the ts, public key, and private key mashed together
+hash = (
+    hashlib.md5()
+)  # w5 algorithm of the ts, public key, and private key mashed together
 # To do this, I made ts a random time, converted ts, public key, and private key into byte format so they can be fed into the md5 formatter, and then convert the hashed string into the hex form, which is the form required by the Marvel API.
 ts = str(time.time())
 ts_byte = bytes(ts, "utf-8")
@@ -57,7 +57,7 @@ def getComicByTitle(search, offset):
     onSaleDate = data_results[0]["dates"][0]["date"]
     creators = data_results[0]["creators"]["items"]
     creatorList = []
-    buyLink = data_results[0]["urls"]
+    buyLink = data_results[0]["urls"][0]["url"]
 
     # For the API, we have to change the link returned by the json or else it gives a permission denied error. To do this, we just append a string onto the end that Marvel has pre-defined. standard_fantastic is the version of the img we chose.
     imgPath = data_results[0]["thumbnail"]["path"]

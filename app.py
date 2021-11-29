@@ -235,8 +235,11 @@ def search():
     if flask.request.method == "POST":
         search = flask.request.form["search"]
         imgUnavailable = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg"
-        resultArr = []
-        resultArr2 = []
+        titleArr = []
+        imgArr = []
+        creatorArr = []
+        onSaleArr = []
+        buyLinkArr = []
         for i in range(10):
             if marvel.getComicByTitle(search, i) != False:
                 (
@@ -248,14 +251,21 @@ def search():
                 ) = marvel.getComicByTitle(search, i)
                 if imgLink == imgUnavailable:
                     imgLink = "/static/comic error message.png"
-                resultArr.append(title)
-                resultArr2.append(imgLink)
-
-        if len(resultArr) == 0:
+                titleArr.append(title)
+                imgArr.append(imgLink)
+                creatorArr.append(creatorList)
+                onSaleArr.append(onSaleDate)
+                buyLinkArr.append(buyLink)
+        if len(titleArr) == 0:
             flask.flash("Bad search parameters, please try again!")
 
         return flask.render_template(
-            "search.html", titles=resultArr, imgLinks=resultArr2
+            "search.html",
+            titles=titleArr,
+            imgLinks=imgArr,
+            creators=creatorArr,
+            onSaleDates=onSaleArr,
+            buyLinks=buyLinkArr,
         )
 
 
