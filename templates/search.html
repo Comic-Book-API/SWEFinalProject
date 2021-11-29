@@ -145,8 +145,11 @@
         </div>
         <div class="center">
             <div >
+                <script src = "/static/script.js"></script> 
                 {% for i in titles %}
-                <a href = "/comicinfo" ><li><h2>{{titles[loop.index0]}} </h2></li> </a>
+
+
+                <a  href = '/comicinfo' onclick = "setCookie({{titles}}, {{imgLinks}}, {{onSaleDates}}, {{creators}}, {{buyLinks}}, {{loop.index0}});"><li><h2>{{i}}</h2></li> </a>
                 <br>
                 <img src="{{imgLinks[loop.index0]}}" height="512px" width="512px"/>
                 {% endfor %}

@@ -226,6 +226,7 @@ def get_account_db_comics(uid):
 def get_account_db_characters(uid):
     return get_account_db_entry(uid).characters
 
+
 @app.route("/logout")
 @login_required
 def logout():
@@ -240,23 +241,37 @@ def search():
     if flask.request.method == "POST":
         search = flask.request.form["search"]
         imgUnavailable = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg"
-        resultArr = []
-        resultArr2 = []
+        titleArr = []
+        imgArr = []
+        creatorArr = []
+        onSaleArr = []
+        buyLinkArr = []
         for i in range(10):
             if marvel.getComicByTitle(search, i) != False:
-                (title, creatorList, onSaleDate, imgLink) = marvel.getComicByTitle(
-                    search, i
-                )
+                (
+                    title,
+                    creatorList,
+                    onSaleDate,
+                    imgLink,
+                    buyLink,
+                ) = marvel.getComicByTitle(search, i)
                 if imgLink == imgUnavailable:
                     imgLink = "/static/comic error message.png"
-                resultArr.append(title)
-                resultArr2.append(imgLink)
-
-        if len(resultArr) == 0:
+                titleArr.append(title)
+                imgArr.append(imgLink)
+                creatorArr.append(creatorList)
+                onSaleArr.append(onSaleDate)
+                buyLinkArr.append(buyLink)
+        if len(titleArr) == 0:
             flask.flash("Bad search parameters, please try again!")
 
         return flask.render_template(
-            "search.html", titles=resultArr, imgLinks=resultArr2
+            "search.html",
+            titles=titleArr,
+            imgLinks=imgArr,
+            creators=creatorArr,
+            onSaleDates=onSaleArr,
+            buyLinks=buyLinkArr,
         )
 
 
@@ -313,9 +328,11 @@ def sign_in():
         username = flask.request.form.get("username")
         password = flask.request.form.get("password")
         user = Account.query.filter_by(username=username).first()
+        print(username)
         if user:
             if password == decrypt(user.password):
                 user.authenticated = True
+                print(user)
                 flask_login.login_user(user)
                 flask.flash("Successfully logged in!")
                 return flask.redirect("/")
