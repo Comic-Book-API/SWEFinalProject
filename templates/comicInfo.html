@@ -1,214 +1,221 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title> Adventure Search </title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css%22%3E"/>
-        <link rel="icon" href="/static/comic-icon-png-2.png">
 
-        <style>
-            body {
-                margin: 0;
-                font-family: "Comic Sans MS", cursive, sans-serif;
-                font-weight: 300;
-                background-image: url("/static/spiral-galaxy.png");
-                background-repeat: no-repeat;
-                background-size: cover;
-            }
+<head>
+    <title> Adventure Search </title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css%22%3E" />
+    <link rel="icon" href="/static/comic-icon-png-2.png">
 
-            * {
-                box-sizing: border-box;
-            }
+    <style>
+        body {
+            margin: 0;
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            font-weight: 300;
+            background-image: url("/static/spiral-galaxy.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
 
-            form.searchbox input[type=text] {
-                padding: 10px;
-                font-size: 17px;
-                border: 1px solid grey;
-                float: left;
-                width: 70%;
-                background: #f1f1f1;
-            }
+        * {
+            box-sizing: border-box;
+        }
 
-            form.searchbox button {
-                float: left;
-                width: 24%;
-                padding: 10px;
-                font-family: "Comic Sans MS", cursive, sans-serif;
-                background: #0323d8;
-                color: white;
-                font-size: 17px;
-                border: 1px solid grey;
-                border-left: none;
-                cursor: pointer;
-            }
+        form.searchbox input[type=text] {
+            padding: 10px;
+            font-size: 17px;
+            border: 1px solid grey;
+            float: left;
+            width: 70%;
+            background: #f1f1f1;
+        }
 
-            form.searchbox button:hover {
-                background: #031999;
-            }
+        form.searchbox button {
+            float: left;
+            width: 24%;
+            padding: 10px;
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            background: #0323d8;
+            color: white;
+            font-size: 17px;
+            border: 1px solid grey;
+            border-left: none;
+            cursor: pointer;
+        }
 
-            form.searchbox::after {
-                content: "";
-                clear: both;
-                display: table;
-            }
+        form.searchbox button:hover {
+            background: #031999;
+        }
 
-            .center {
-                text-align: center;
-                padding-bottom: 16px;
-            }
+        form.searchbox::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
 
-            .top-nav {
-                overflow: hidden;
-                background-color: #311b92;
-            }
+        .center {
+            text-align: center;
+            padding-bottom: 16px;
+        }
 
-            .top-nav a {
-                float: left;
-                color: #f2f2f2;
-                text-align: center;
-                padding: 14px 16px;
-                text-decoration: none;
-                font-size: 17px;
-            }
+        .top-nav {
+            overflow: hidden;
+            background-color: #311b92;
+        }
 
-            .top-nav a:hover {
-                background-color: #3c22af;
-                color: black;
-            }
+        .top-nav a {
+            float: left;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
 
-            .top-nav a.active {
-                background-color: #1b1149;
-                color: white;
-            }
-            .top-nav {
-                overflow: hidden;
-                background-color: #311b92;
-            }
+        .top-nav a:hover {
+            background-color: #3c22af;
+            color: black;
+        }
 
-            .top-nav a {
-                float: left;
-                color: #f2f2f2;
-                text-align: center;
-                padding: 14px 16px;
-                text-decoration: none;
-                font-size: 17px;
-            }
+        .top-nav a.active {
+            background-color: #1b1149;
+            color: white;
+        }
 
-            .top-nav a:hover {
-                background-color: #3c22af;
-                color: black;
-            }
+        .top-nav {
+            overflow: hidden;
+            background-color: #311b92;
+        }
 
-            .top-nav a.active {
-                background-color: #1b1149;
-                
-                color: white;
-            }
+        .top-nav a {
+            float: left;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
 
-            button {
-                background-color: #1b1149;
-                color: white;
-                padding: 14px 20px;
-                margin: 8px 0;
-                border: none;
-                cursor: pointer;
-                width: 100%;
-                opacity: 0.9;
-            }
+        .top-nav a:hover {
+            background-color: #3c22af;
+            color: black;
+        }
 
-            button:hover {
-                opacity: 1;
-            }
+        .top-nav a.active {
+            background-color: #1b1149;
 
-            .signin_button {
-                float: left;
-                width: 50%;
-            }
-        </style>
+            color: white;
+        }
 
-    </head>
-    <body>
-        <div>
-            <div class="top-nav">
-                <a class="active" href="/"> Home </a>
-                <a href="/login"> Log In </a>
-                <a href="/search"> Search </a>
+        .favorite_button {
+            background-color: #1b1149;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+        }
+
+        .favorite_button:hover {
+            opacity: 1;
+            background-color: #321e8b;
+        }
+
+        .position {
+            padding-left: 16px;
+            margin: auto;
+            text-align: center;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div>
+        <div class="top-nav">
+            <a class="active" href="/"> Home </a>
+            <a href="/login"> Log In </a>
+            <a href="/search"> Search </a>
+        </div>
+    </div>
+
+    <div class="position">
+        <script src="/static/script.js"></script>
+
+        <h1>
+            <div id="title"></div>
+            <h3> Want to learn more about this comic? Click the link provided below. Enjoy!</h3>
+            <h4><a id="buyLink" href=""></a></h4>
+        </h1>
+        <img id="image" src="id" height="512px" width="512px" />
+        <form method="POST" action="/comicInfo">
+            <div>
+                <button type="submit" class="favorite_button"> Favorite </button>
             </div>
-        </div>
+        </form>
+        <br>
+        <h3> The comic sale date is: <div id="onSaleDate"></div>
+        </h3>
+        <h3> The creators of this comic are: <div id="creatorList"></div>
+        </h3>
+        <script>
+            function getTitle() {
+                var cookie = getCookie();
+                var index = cookie.indexOf("|");
+                var title = cookie.substring(0, index);
+                return title;
+            }
+            function getImg() {
+                var cookie = getCookie();
+                var index = cookie.indexOf("|");
+                var index2 = cookie.indexOf("|", index);
+                var index3 = cookie.indexOf("|", index2 + 1);
+                var img = cookie.substring(index2 + 1, index3)
+                document.getElementById("image").src = img;
+                return img
+            }
+            function getOnSaleDate() {
+                var cookie = getCookie();
+                var index = cookie.indexOf("|");
+                var index2 = cookie.indexOf("|", index);
+                var index3 = cookie.indexOf("|", index2 + 1);
+                var index4 = cookie.indexOf("|", index3 + 1);
+                var onSaleDate = cookie.substring(index3 + 1, index4);
+                return onSaleDate;
+            }
+            function getCreatorList() {
+                var cookie = getCookie();
+                var index = cookie.indexOf("|");
+                var index2 = cookie.indexOf("|", index);
+                var index3 = cookie.indexOf("|", index2 + 1);
+                var index4 = cookie.indexOf("|", index3 + 1);
+                var index5 = cookie.indexOf("|", index4 + 1);
+                var creatorList = cookie.substring(index4 + 1, index5);
+                return creatorList
+            }
+            function getBuyLink() {
+                var cookie = getCookie();
+                var index = cookie.indexOf("|");
+                var index2 = cookie.indexOf("|", index);
+                var index3 = cookie.indexOf("|", index2 + 1);
+                var index4 = cookie.indexOf("|", index3 + 1);
+                var index5 = cookie.indexOf("|", index4 + 1);
+                var index6 = cookie.indexOf("|", index5 + 1);
+                var buyLink = cookie.substring(index5 + 1);
+                document.getElementById("buyLink").setAttribute("href", buyLink)
+                return buyLink
+            }
 
-        <div>
-            <!-- pass data here -->
-            <script src = "/static/script.js"></script> 
-            <form method="POST" action="/comicInfo">
-                <div>
-                    <button type="submit" class="favorite_button"> Favorite </button>
-                </div>
-            </form>
-               <h1> 
-                    <div id = "title"></div> 
-                    Click <a id = "buyLink" href = "">here</a> to view more information about this comic.
-                </h1>
-                <img id = "image" src = "id"  height="512px" width="512px"/>
-                <br>
-                <h3>This comic was first on sale on: <div id = "onSaleDate"></div></h3>
-                <h4>and was possible by the efforts of these people: <div id = "creatorList"></div></h4>
-                <script>
-                    function getTitle() {
-                        var cookie = getCookie();
-                        var index = cookie.indexOf("|");
-                        var title = cookie.substring(0, index);
-                        return title;
-                    }
-                    function getImg() {
-                        var cookie = getCookie();
-                        var index = cookie.indexOf("|");
-                        var index2 = cookie.indexOf("|", index);
-                        var index3 = cookie.indexOf("|", index2 + 1);
-                        var img = cookie.substring(index2 + 1, index3)
-                        document.getElementById("image").src = img;
-                        return img
-                    }
-                    function getOnSaleDate() {
-                        var cookie = getCookie();
-                        var index = cookie.indexOf("|");
-                        var index2 = cookie.indexOf("|", index);
-                        var index3 = cookie.indexOf("|", index2 + 1);
-                        var index4 = cookie.indexOf("|", index3 + 1);
-                        var onSaleDate = cookie.substring(index3 + 1, index4);
-                        return onSaleDate;
-                    }
-                    function getCreatorList() {
-                        var cookie = getCookie();
-                        var index = cookie.indexOf("|");
-                        var index2 = cookie.indexOf("|", index);
-                        var index3 = cookie.indexOf("|", index2 + 1);
-                        var index4 = cookie.indexOf("|", index3 + 1);
-                        var index5 = cookie.indexOf("|", index4 + 1);
-                        var creatorList = cookie.substring(index4 + 1, index5);
-                        return creatorList
-                    }
-                    function getBuyLink() {
-                        var cookie = getCookie();
-                        var index = cookie.indexOf("|");
-                        var index2 = cookie.indexOf("|", index);
-                        var index3 = cookie.indexOf("|", index2 + 1);
-                        var index4 = cookie.indexOf("|", index3 + 1);
-                        var index5 = cookie.indexOf("|", index4 + 1);
-                        var index6 = cookie.indexOf("|", index5 + 1);
-                        var buyLink = cookie.substring(index5 + 1);
-                        document.getElementById("buyLink").setAttribute("href", buyLink)
-                        return buyLink
-                    }
+            window.onLoad = function () {
+                document.getElementById("img");
+            }
+            document.getElementById('title').textContent = getTitle();
+            document.getElementById('onSaleDate').textContent = getOnSaleDate();
+            document.getElementById("creatorList").textContent = getCreatorList();
+            document.getElementById("buyLink").textContent = getBuyLink();
+            document.getElementById("img").textContent = getImg();
+        </script>
+    </div>
+</body>
 
-                    window.onLoad = function() {
-                        document.getElementById("img");
-                    }
-                    document.getElementById('title').textContent = getTitle();
-                    document.getElementById('onSaleDate').textContent = getOnSaleDate(); 
-                    document.getElementById("creatorList").textContent = getCreatorList();
-                    document.getElementById("buyLink").textContent = getBuyLink();
-                    document.getElementById("img").textContent = getImg();
-                </script>
-        </div>
-        <div><h1></h1></div>
-    </body>
 </html>
