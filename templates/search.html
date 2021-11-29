@@ -149,7 +149,7 @@
                 {% for i in titles %}
 
 
-                <a id = "link" href = '/comicinfo' onclick = "setCookie({{titles}}, {{imgLinks}}, {{onSaleDates}}, {{creators}}, {{buyLinks}}, {{loop.index0}});"><li><h2>{{i}}</h2></li> </a>
+                <a  href = '/comicinfo' onclick = "setCookie({{titles}}, {{imgLinks}}, {{onSaleDates}}, {{creators}}, {{buyLinks}}, {{loop.index0}});"><li><h2>{{i}}</h2></li> </a>
                 <br>
                 <img src="{{imgLinks[loop.index0]}}" height="512px" width="512px"/>
                 {% endfor %}

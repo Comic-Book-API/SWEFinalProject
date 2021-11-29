@@ -194,7 +194,7 @@
                         var index4 = cookie.indexOf("|", index3 + 1);
                         var index5 = cookie.indexOf("|", index4 + 1);
                         var index6 = cookie.indexOf("|", index5 + 1);
-                        var buyLink = cookie.substring(index5 + 1, index6);
+                        var buyLink = cookie.substring(index5 + 1);
                         document.getElementById("buyLink").setAttribute("href", buyLink)
                         return buyLink
                     }
@@ -207,7 +207,6 @@
                     document.getElementById("creatorList").textContent = getCreatorList();
                     document.getElementById("buyLink").textContent = getBuyLink();
                     document.getElementById("img").textContent = getImg();
-
                 </script>
         </div>
         <div><h1></h1></div>

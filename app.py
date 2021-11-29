@@ -6,7 +6,7 @@ import os
 import getpass
 from dotenv import find_dotenv, load_dotenv
 from cryptography.fernet import Fernet
-from flask_login import LoginManager, login_user
+from flask_login import LoginManager, login_user, login_required
 import flask_login
 import marvel_api as marvel
 
@@ -68,13 +68,12 @@ class Account(db.Model):
 
 # Login functions
 @login_manager.user_loader
-def user_loader(username):
-    pass
-    # user = Account.query.filter_by(username=username).first()
-    # if user:
-    #     return user
-    # else:
-    #     return None
+def user_loader(uid):
+    user = Account.query.filter_by(uid=uid).first()
+    if user:
+        return user
+    else:
+        return None
 
 
 db.create_all()
@@ -226,6 +225,13 @@ def get_account_db_comics(uid):
 # returns the stored characters, will need to be decoded
 def get_account_db_characters(uid):
     return get_account_db_entry(uid).characters
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    flask_login.logout_user()
+    return flask.render_template("logout.html")
 
 
 @app.route("/search", methods=["POST", "GET"])

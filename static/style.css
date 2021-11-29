@@ -4,6 +4,8 @@ body {
     background-image: url("spiral-galaxy.png");
     background-repeat: no-repeat;
     background-size: cover;
+    color:black;
+    font-size:18px;
 }
 
 .top-nav {
@@ -48,8 +50,7 @@ img {
     opacity: 0.8;
 }
 
-/* hides the images by default */
-.slides {
+.slides{
     display: none;
 }
 
