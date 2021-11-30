@@ -245,16 +245,23 @@ def search():
             (title, creatorList, onSaleDate, img, buyLink) = marvel.getComicByTitle(
                 search, 0
             )
-        if len(title) == 0:
-            flask.flash("Bad search parameters, please try again!")
 
+            return flask.render_template(
+                "search.html",
+                titles=title,
+                imgLinks=img,
+                creators=creatorList,
+                onSaleDates=onSaleDate,
+                buyLinks=buyLink,
+            )
+        flask.flash("Bad search parameters, please try again!")
         return flask.render_template(
             "search.html",
-            titles=title,
-            imgLinks=img,
-            creators=creatorList,
-            onSaleDates=onSaleDate,
-            buyLinks=buyLink,
+            titles=[],
+            imgLinks=[],
+            creators=[],
+            onSaleDates=[],
+            buyLinks=[],
         )
 
 
@@ -331,15 +338,15 @@ def characters():
         search = flask.request.form["search"]
         if marvel.getCharacter(search, 0) != False:
             (id, name, description, imgLink) = marvel.getCharacter(search, 0)
-        if len(name) == 0:
-            flask.flash("Bad search parameters, please try again!")
-        if description[0] == " ":
-            description[0] = "no description available for this character."
-        for i in range(len(description)):
-            if description[i] == " ":
-                description[i] = "no description available for this character."
+            return flask.render_template(
+                "characters.html",
+                titles=name,
+                imgLinks=imgLink,
+                descriptions=description,
+            )
+        flask.flash("Bad search parameters, please try again!")
         return flask.render_template(
-            "characters.html", titles=name, imgLinks=imgLink, descriptions=description
+            "characters.html", titles=[], imgLinks=[], descriptions=[]
         )
 
 
