@@ -6,7 +6,7 @@ import os
 import getpass
 from dotenv import find_dotenv, load_dotenv
 from cryptography.fernet import Fernet
-from flask_login import LoginManager, login_user, login_required
+from flask_login import LoginManager, login_user, login_required, current_user
 import flask_login
 import marvel_api as marvel
 
@@ -271,14 +271,25 @@ def characterinfo():
 
 
 @app.route("/comicinfo", methods=["POST", "GET"])
+@app.route("/comicInfo", methods=["POST", "GET"])
 def comicinfo():
     if flask.request.method == 'GET':
         return flask.render_template("comicInfo.html")
     if flask.request.method == "POST":
-        cookies = request.cookies
-        id
-        for i in request.cookies:
-            if print(i)
+        print("did I get here?")
+        cookies = flask.request.cookies
+        cid = ""
+        for i in flask.request.cookies:
+            if i != "" and i != "session":
+                cid = i
+                break
+        cid = cid.split("|").pop().split("/")[5]
+        user = current_user.get_id()
+        if user:
+            add_comic(user, cid)
+            return flask.render_template("favorite_success.html")
+        else:
+            return flask.render_template("favorite_fail.html")
 
 
 @app.route("/filter", methods=["POST"])
