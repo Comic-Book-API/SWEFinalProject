@@ -272,9 +272,9 @@ def characterinfo():
 
 @app.route("/comicinfo", methods=["POST", "GET"])
 def comicinfo():
-    if flask.request.method = 'GET':
+    if flask.request.method == 'GET':
         return flask.render_template("comicInfo.html")
-    if flask.request.method = "POST":
+    if flask.request.method == "POST":
         cookies = request.cookies
         id
         for i in request.cookies:
