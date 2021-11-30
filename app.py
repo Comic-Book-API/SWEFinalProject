@@ -355,7 +355,7 @@ def comicInfo():
 
 @app.route("/characterInfo", methods=["POST", "GET"])
 def characterInfo():
-    return flask.render_template("characterInfo.html")
+    return flask.render_template("characters.html")
 
 
 app.run(host="0.0.0.0", port=os.getenv("PORT", 8080), use_reloader=True)

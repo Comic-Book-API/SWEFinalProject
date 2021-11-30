@@ -95,6 +95,36 @@
 
             color: white;
         }
+
+        .container {
+            position: relative;
+        }
+
+        .image {
+            padding-left: 155px;
+        }
+
+        .text {
+            position: absolute;
+            top: 8px;
+            right: 16px;
+            width: 55%;
+
+        }
+
+        .favorite_button {
+            background-color: #1b1149;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+        }
+
+        .favorite_button:hover {
+            opacity: 1;
+            background-color: #321e8b;
+        }
     </style>
 
 </head>
@@ -132,16 +162,26 @@
         </div>
 
     </div>
-    <div class="center">
-        <div>
-            {% for i in titles %}
+
+    <div>
+        {% for i in titles %}
+        <div class="container">
+            <div class="image">
                 <h2><img src="{{imgLinks[loop.index0]}}" height="512px" width="512px" /></h2>
-            <br>
-            Name: {{titles[loop.index0]}} <br>
-            Description: {{descriptions[loop.index0]}}
+            </div>
+            <div class="text">
+                <h1>Name: {{titles[loop.index0]}}</h1>
+                <form>
+                    <div>
+                        <button type="submit" class="favorite_button"> Favorite </button>
+                    </div>
+                </form>
+                <h3>Description: {{descriptions[loop.index0]}}</h3>
+            </div><br>
             {% endfor %}
         </div>
     </div>
+
 </body>
 
 </html>
