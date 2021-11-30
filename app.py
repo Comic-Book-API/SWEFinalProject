@@ -324,6 +324,7 @@ def sign_in():
 def characterinfo():
     return flask.render_template("characterInfo.html")
 
+
 @app.route("/setfav")
 def setfav():
     cookies = flask.request.cookies
@@ -346,6 +347,7 @@ def setfav():
             return resp
     return flask.render_template("index.html")
 
+
 @app.route("/characters", methods=["POST", "GET"])
 def characters():
     if flask.request.method == "GET":
@@ -362,23 +364,23 @@ def characters():
                 imgLinks=imgLink,
                 descriptions=description,
                 ids=ids,
-                )
+            )
         flask.flash("Bad search parameters, please try again!")
         return flask.render_template(
             "characters.html", titles=[], imgLinks=[], descriptions=[]
-            )
+        )
 
 
 @app.route("/comicinfo", methods=["POST", "GET"])
 @app.route("/comicInfo", methods=["POST", "GET"])
 def comicinfo():
-    if flask.request.method == 'GET':
+    if flask.request.method == "GET":
         return flask.render_template("comicInfo.html")
     if flask.request.method == "POST":
         cookies = flask.request.cookies
         cid = ""
         for i in flask.request.cookies:
-            if i != "" and i != "session" and i != "id" and i != cindex:
+            if i != "" and i != "session" and i != "id" and i != index:
                 cid = i
                 break
         cid = cid.split("|").pop().split("/")[5]
