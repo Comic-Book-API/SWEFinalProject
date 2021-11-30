@@ -141,7 +141,6 @@
             </form>
             <h3> Want to Search for Characters Instead? <a href="/characters"> Click Here! </a></h3>
         </div>
-<<<<<<< HEAD
 
     </div>
     <div class="center">
@@ -153,19 +152,6 @@
             <br>
             <li><img src="{{imgLinks[loop.index0]}}" height="512px" width="512px" /></li>
             {% endfor %}
-=======
-        <div class="center">
-            <div >
-                <script src = "/static/script.js"></script> 
-                {% for i in titles %}
-
-
-                <a  href = '/comicinfo' onclick = "setCookie({{titles}}, {{imgLinks}}, {{onSaleDates}}, {{creators}}, {{buyLinks}}, {{loop.index0}});"><li><h2>{{i}}</h2></li> </a>
-                <br>
-                <img src="{{imgLinks[loop.index0]}}" height="512px" width="512px"/>
-                {% endfor %}
-            </div>
->>>>>>> main
         </div>
     </div>
 </body>
