@@ -101,11 +101,11 @@
 <body>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
-        <ul class = flashe>
+    <ul class=flashe>
         {% for message in messages %}
-                {{ message }}
-            {% endfor %}
-        </ul>
+        {{ message }}
+        {% endfor %}
+    </ul>
     {% endif %}
     {% endwith %}
     <h1> Sign In! </h1>
@@ -127,4 +127,5 @@
         </form>
     </section>
 </body>
-</html> 
+
+</html>

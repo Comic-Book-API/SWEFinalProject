@@ -293,7 +293,7 @@ def setFilter():
 
 @app.route("/")
 def index():
-    return flask.render_template("index.html")  # signup.html
+    return flask.render_template("index.html")
 
 
 @app.route("/signup")
@@ -311,10 +311,7 @@ def register():
     else:
         add_account(username, password)
         flask.flash("Sucessful signup!")
-
-    # we just need database to continue
-
-    return flask.redirect("/")  # change to login.html
+    return flask.redirect("/login")
 
 
 @app.route("/quiz")
@@ -370,6 +367,9 @@ def characters():
         )
     return flask.render_template("characters.html")
 
+@app.route("/about")
+def about():
+    return flask.render_template("landingPage.html")
 
 @app.route("/comicInfo", methods=["POST", "GET"])
 def comicInfo():
