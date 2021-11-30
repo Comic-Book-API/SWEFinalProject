@@ -107,13 +107,18 @@
             color: white;
         }
 
+<<<<<<< HEAD
         button {
+=======
+        .favorite_button {
+>>>>>>> main
             background-color: #1b1149;
             color: white;
             padding: 14px 20px;
             margin: 8px 0;
             border: none;
             cursor: pointer;
+<<<<<<< HEAD
             width: 100%;
             opacity: 0.9;
         }
@@ -125,6 +130,19 @@
         .signin_button {
             float: left;
             width: 50%;
+=======
+        }
+
+        .favorite_button:hover {
+            opacity: 1;
+            background-color: #321e8b;
+        }
+
+        .position {
+            padding-left: 16px;
+            margin: auto;
+            text-align: center;
+>>>>>>> main
         }
     </style>
 
@@ -134,23 +152,103 @@
     <div>
         <div class="top-nav">
             <a class="active" href="/"> Home </a>
+<<<<<<< HEAD
             <a href="/about"> About Us </a>
+=======
+>>>>>>> main
             <a href="/login"> Log In </a>
             <a href="/search"> Search </a>
         </div>
     </div>
 
+<<<<<<< HEAD
     <div>
         <!-- pass data here -->
 
+=======
+    <div class="position">
+        <script src="/static/script.js"></script>
+
+        <h1>
+            <div id="title"></div>
+            <h3> Want to learn more about this comic? Click the link provided below. Enjoy!</h3>
+            <h4><a id="buyLink" href=""></a></h4>
+        </h1>
+        <img id="image" src="id" height="512px" width="512px" />
+>>>>>>> main
         <form method="POST" action="/comicInfo">
             <div>
                 <button type="submit" class="favorite_button"> Favorite </button>
             </div>
         </form>
+<<<<<<< HEAD
     </div>
     <div>
         <h1>Page will soon be populated</h1>
+=======
+        <br>
+        <h3> The comic sale date is: <div id="onSaleDate"></div>
+        </h3>
+        <h3> The creators of this comic are: <div id="creatorList"></div>
+        </h3>
+        <script>
+            function getTitle() {
+                var cookie = getCookie();
+                var index = cookie.indexOf("|");
+                var title = cookie.substring(0, index);
+                return title;
+            }
+            function getImg() {
+                var cookie = getCookie();
+                var index = cookie.indexOf("|");
+                var index2 = cookie.indexOf("|", index);
+                var index3 = cookie.indexOf("|", index2 + 1);
+                var img = cookie.substring(index2 + 1, index3)
+                document.getElementById("image").src = img;
+                return img
+            }
+            function getOnSaleDate() {
+                var cookie = getCookie();
+                var index = cookie.indexOf("|");
+                var index2 = cookie.indexOf("|", index);
+                var index3 = cookie.indexOf("|", index2 + 1);
+                var index4 = cookie.indexOf("|", index3 + 1);
+                var onSaleDate = cookie.substring(index3 + 1, index4);
+                return onSaleDate;
+            }
+            function getCreatorList() {
+                var cookie = getCookie();
+                var index = cookie.indexOf("|");
+                var index2 = cookie.indexOf("|", index);
+                var index3 = cookie.indexOf("|", index2 + 1);
+                var index4 = cookie.indexOf("|", index3 + 1);
+                var index5 = cookie.indexOf("|", index4 + 1);
+                var creatorList = cookie.substring(index4 + 1, index5);
+                return creatorList
+            }
+            function getBuyLink() {
+                var cookie = getCookie();
+                var index = cookie.indexOf("|");
+                var index2 = cookie.indexOf("|", index);
+                var index3 = cookie.indexOf("|", index2 + 1);
+                var index4 = cookie.indexOf("|", index3 + 1);
+                var index5 = cookie.indexOf("|", index4 + 1);
+                var index6 = cookie.indexOf("|", index5 + 1);
+                var buyLink = cookie.substring(index5 + 1);
+                document.getElementById("buyLink").setAttribute("href", buyLink)
+                return buyLink
+            }
+
+            window.onLoad = function () {
+                document.getElementById("img");
+            }
+            document.getElementById('title').textContent = getTitle();
+            document.getElementById('onSaleDate').textContent = getOnSaleDate();
+            document.getElementById("creatorList").textContent = getCreatorList();
+            document.getElementById("buyLink").textContent = getBuyLink();
+            document.getElementById("img").textContent = getImg();
+        </script>
+>>>>>>> main
     </div>
 </body>
 

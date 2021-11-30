@@ -41,6 +41,7 @@
 </head>
 
 <body>
+
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     <ul class=flashe>
@@ -52,9 +53,18 @@
     {% endwith %}
     <div class="top-nav">
         <a class="active" href="#home"> Home </a>
+<<<<<<< HEAD
         <a href="/about"> About Us </a>
         <a href="/login"> Log In </a>
+=======
+>>>>>>> main
         <a href="/search"> Search </a>
+        {% if current_user.username%}
+        <a href="/logout"> Logout </a>
+        <a href="/profile"> Profile </a>
+        {% else %}
+        <a href="/login"> Log In </a>
+        {% endif %}
     </div>
 
     <div style="padding-left: 16px;">
@@ -92,6 +102,7 @@
     <h2 style="padding-left: 16px;"><b> The History </b></h2>
     <div class="history" style="padding-left: 16px; padding-bottom: 16px;">
         <p>
+<<<<<<< HEAD
             The history of Marvel started in 1939 by Martin Goodman undernaeth a number of imprints, which is known as
             Timely Comics. Timely's first publication, <i>Marvel Comics #1</i>, included the first superhero the
             <b>Human Torch</b>. After a while,
@@ -105,6 +116,16 @@
             comics that was created by Stan Lee, Jack Kirby, Steve Dikto and many others. Following <i>The Fantastic
                 Four</i>, Marvel comics developed a reputation for
             focusing on characterization and adult issues to a greater extent.
+=======
+        The history of Marvel started in 1939 by Martin Goodman undernaeth a number of imprints, which is known as
+        Timely Comics. Timely's first publication, <i>Marvel Comics #1</i>, included the first superhero the <b>Human Torch</b>. After a while,
+        Timely changed its name to Atlas Comics in 1951, and eventually became Marvel Comics in the early 1960s. Atlas Comics expanded into a wider
+        variety of genres, featuring horror, Westerns, humor, crime, war comics, etc..
+        In 1961, Stan Lee revolutionized superhero comics by introducing superheroes designed to appeal to an older audience than the predominantly
+        child audiences of the medium, which what Marvel later called the <b>Marvel Age of Comics</b>. The company launched <i>The Fantastic Four</i> and other
+        comics that was created by Stan Lee, Jack Kirby, Steve Dikto and many others. Following <i>The Fantastic Four</i>, Marvel comics developed a reputation for
+        focusing on characterization and adult issues to a greater extent.
+>>>>>>> main
         </p>
     </div>
     <br><br>

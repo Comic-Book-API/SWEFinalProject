@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<<<<<<< HEAD
 
 <head>
     <title> Adventure Search </title>
@@ -133,10 +134,150 @@
             <h2> Let's Get to Searching for Comics </h2>
             <form method="POST" action="/search" class="searchbox" style="margin: auto; max-width: 305px;">
                 <input type="text" placeholder="Search.." name="search">
+=======
+    <head>
+        <title> Adventure Search </title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css%22%3E"/>
+        <link rel="icon" href="/static/comic-icon-png-2.png">
+
+        <style>
+            body {
+                margin: 0;
+                font-family: "Comic Sans MS", cursive, sans-serif;
+                font-weight: 300;
+                background-image: url("/static/spiral-galaxy.png");
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            form.searchbox input[type=text] {
+                padding: 10px;
+                font-size: 17px;
+                border: 1px solid grey;
+                float: left;
+                width: 70%;
+                background: #f1f1f1;
+            }
+
+            form.searchbox button {
+                float: left;
+                width: 24%;
+                padding: 10px;
+                font-family: "Comic Sans MS", cursive, sans-serif;
+                background: #0323d8;
+                color: white;
+                font-size: 17px;
+                border: 1px solid grey;
+                border-left: none;
+                cursor: pointer;
+            }
+
+            form.searchbox button:hover {
+                background: #031999;
+            }
+
+            form.searchbox::after {
+                content: "";
+                clear: both;
+                display: table;
+            }
+
+            .center {
+                text-align: center;
+                padding-bottom: 16px;
+            }
+
+            .placement {
+                font-family: "Comic Sans MS", cursive, sans-serif;
+                font-size: 12px;
+                background-color: #0323d8;
+                color: #fff;
+                border: 0px;
+                border-radius: 3px;
+                cursor: pointer;   
+            }
+
+            .top-nav {
+                overflow: hidden;
+                background-color: #311b92;
+            }
+
+            .top-nav a {
+                float: left;
+                color: #f2f2f2;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                font-size: 17px;
+            }
+
+            .top-nav a:hover {
+                background-color: #3c22af;
+                color: black;
+            }
+
+            .top-nav a.active {
+                background-color: #1b1149;
+                color: white;
+            }
+            .top-nav {
+                overflow: hidden;
+                background-color: #311b92;
+            }
+
+            .top-nav a {
+                float: left;
+                color: #f2f2f2;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                font-size: 17px;
+            }
+
+            .top-nav a:hover {
+                background-color: #3c22af;
+                color: black;
+            }
+
+            .top-nav a.active {
+                background-color: #1b1149;
+                
+                color: white;
+            }
+        </style>
+
+    </head>
+    <body>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class = flashe>
+            {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% endwith %}
+        <div>
+            <div class="top-nav">
+                <a class="active" href="/"> Home </a>
+                <a href="/login"> Log In </a>
+                <a href="/search"> Search </a>
+            </div>
+
+            <div class="center" >
+                <h2 > Let's Get to Searching for Comics </h2>
+                <form method="POST" action="/search" class="searchbox" style="margin: auto; max-width: 305px;"> 
+                <input type ="text" placeholder="Search.." name="search">
+>>>>>>> main
                 <button type="submit"> Submit </button>
             </form>
             <h3> Want to Search for Characters Instead? <a href="/characters"> Click Here! </a></h3>
         </div>
+<<<<<<< HEAD
 
     </div>
     <div class="center">
@@ -148,6 +289,19 @@
             <br>
             <li><img src="{{imgLinks[loop.index0]}}" height="512px" width="512px" /></li>
             {% endfor %}
+=======
+        <div class="center">
+            <div >
+                <script src = "/static/script.js"></script> 
+                {% for i in titles %}
+
+
+                <a  href = '/comicinfo' onclick = "setCookie({{titles}}, {{imgLinks}}, {{onSaleDates}}, {{creators}}, {{buyLinks}}, {{loop.index0}});"><li><h2>{{i}}</h2></li> </a>
+                <br>
+                <img src="{{imgLinks[loop.index0]}}" height="512px" width="512px"/>
+                {% endfor %}
+            </div>
+>>>>>>> main
         </div>
     </div>
 </body>

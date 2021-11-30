@@ -6,7 +6,7 @@ import os
 import getpass
 from dotenv import find_dotenv, load_dotenv
 from cryptography.fernet import Fernet
-from flask_login import LoginManager, login_user
+from flask_login import LoginManager, login_user, login_required
 import flask_login
 import marvel_api as marvel
 
@@ -68,8 +68,8 @@ class Account(db.Model):
 
 # Login functions
 @login_manager.user_loader
-def user_loader(username):
-    user = Account.query.get(uid_by_username(username))
+def user_loader(uid):
+    user = Account.query.filter_by(uid=uid).first()
     if user:
         return user
     else:
@@ -227,24 +227,62 @@ def get_account_db_characters(uid):
     return get_account_db_entry(uid).characters
 
 
+@app.route("/logout")
+@login_required
+def logout():
+    flask_login.logout_user()
+    return flask.render_template("logout.html")
+
+
 @app.route("/search", methods=["POST", "GET"])
 def search():
     if flask.request.method == "GET":
         return flask.render_template("search.html")
     if flask.request.method == "POST":
         search = flask.request.form["search"]
-        resultArr = []
-        resultArr2 = []
+        imgUnavailable = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg"
+        titleArr = []
+        imgArr = []
+        creatorArr = []
+        onSaleArr = []
+        buyLinkArr = []
         for i in range(10):
-            (title, creatorList, onSaleDate, imgLink) = marvel.getComicByTitle(
-                search, i
-            )
-            resultArr.append(title)
-            resultArr2.append(imgLink)
+            if marvel.getComicByTitle(search, i) != False:
+                (
+                    title,
+                    creatorList,
+                    onSaleDate,
+                    imgLink,
+                    buyLink,
+                ) = marvel.getComicByTitle(search, i)
+                if imgLink == imgUnavailable:
+                    imgLink = "/static/comic error message.png"
+                titleArr.append(title)
+                imgArr.append(imgLink)
+                creatorArr.append(creatorList)
+                onSaleArr.append(onSaleDate)
+                buyLinkArr.append(buyLink)
+        if len(titleArr) == 0:
+            flask.flash("Bad search parameters, please try again!")
 
         return flask.render_template(
-            "search.html", titles=resultArr, imgLinks=resultArr2
+            "search.html",
+            titles=titleArr,
+            imgLinks=imgArr,
+            creators=creatorArr,
+            onSaleDates=onSaleArr,
+            buyLinks=buyLinkArr,
         )
+
+
+@app.route("/characterinfo", methods=["POST", "GET"])
+def characterinfo():
+    return flask.render_template("characterInfo.html")
+
+
+@app.route("/comicinfo", methods=["POST", "GET"])
+def comicinfo():
+    return flask.render_template("comicInfo.html")
 
 
 @app.route("/filter", methods=["POST"])
@@ -287,9 +325,11 @@ def sign_in():
         username = flask.request.form.get("username")
         password = flask.request.form.get("password")
         user = Account.query.filter_by(username=username).first()
+        print(username)
         if user:
             if password == decrypt(user.password):
                 user.authenticated = True
+                print(user)
                 flask_login.login_user(user)
                 flask.flash("Successfully logged in!")
                 return flask.redirect("/")
@@ -304,11 +344,41 @@ def sign_in():
 
 @app.route("/characters", methods=["POST", "GET"])
 def characters():
+    if flask.request.method == "GET":
+        return flask.render_template("characters.html")
+    if flask.request.method == "POST":
+        search = flask.request.form["search"]
+        resultArr = []
+        resultArr2 = []
+        for i in range(10):
+            if marvel.getCharacter(search, i) != False:
+                (id, name, description, imgLink) = marvel.getCharacter(search, i)
+                if (
+                    imgLink
+                    == "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg"
+                ):
+                    imgLink = "/static/comic error message.png"
+                resultArr.append(name)
+                resultArr2.append(imgLink)
+        if len(resultArr) == 0:
+            flask.flash("Bad search parameters, please try again!")
+        return flask.render_template(
+            "characters.html", titles=resultArr, imgLinks=resultArr2
+        )
     return flask.render_template("characters.html")
 
 @app.route("/about")
 def about():
     return flask.render_template("landingPage.html")
+
+@app.route("/comicInfo", methods=["POST", "GET"])
+def comicInfo():
+    return flask.render_template("comicInfo.html")
+
+
+@app.route("/characterInfo", methods=["POST", "GET"])
+def characterInfo():
+    return flask.render_template("characterInfo.html")
 
 
 app.run(host="0.0.0.0", port=os.getenv("PORT", 8080), use_reloader=True)

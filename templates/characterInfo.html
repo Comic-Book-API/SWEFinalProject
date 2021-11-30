@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Adventure Search </title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css%22%3E"/>
+        <link rel="icon" href="/static/comic-icon-png-2.png">
+
+        <style>
+            body {
+                margin: 0;
+                font-family: "Comic Sans MS", cursive, sans-serif;
+                font-weight: 300;
+                background-image: url("/static/spiral-galaxy.png");
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            form.searchbox input[type=text] {
+                padding: 10px;
+                font-size: 17px;
+                border: 1px solid grey;
+                float: left;
+                width: 70%;
+                background: #f1f1f1;
+            }
+
+            form.searchbox button {
+                float: left;
+                width: 24%;
+                padding: 10px;
+                font-family: "Comic Sans MS", cursive, sans-serif;
+                background: #0323d8;
+                color: white;
+                font-size: 17px;
+                border: 1px solid grey;
+                border-left: none;
+                cursor: pointer;
+            }
+
+            form.searchbox button:hover {
+                background: #031999;
+            }
+
+            form.searchbox::after {
+                content: "";
+                clear: both;
+                display: table;
+            }
+
+            .center {
+                text-align: center;
+                padding-bottom: 16px;
+            }
+
+            .top-nav {
+                overflow: hidden;
+                background-color: #311b92;
+            }
+
+            .top-nav a {
+                float: left;
+                color: #f2f2f2;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                font-size: 17px;
+            }
+
+            .top-nav a:hover {
+                background-color: #3c22af;
+                color: black;
+            }
+
+            .top-nav a.active {
+                background-color: #1b1149;
+                color: white;
+            }
+            .top-nav {
+                overflow: hidden;
+                background-color: #311b92;
+            }
+
+            .top-nav a {
+                float: left;
+                color: #f2f2f2;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                font-size: 17px;
+            }
+
+            .top-nav a:hover {
+                background-color: #3c22af;
+                color: black;
+            }
+
+            .top-nav a.active {
+                background-color: #1b1149;
+                
+                color: white;
+            }
+            
+            button {
+                background-color: #1b1149;
+                color: white;
+                padding: 14px 20px;
+                margin: 8px 0;
+                border: none;
+                cursor: pointer;
+                width: 100%;
+                opacity: 0.9;
+            }
+
+            button:hover {
+                opacity: 1;
+            }
+
+            .signin_button {
+                float: left;
+                width: 50%;
+            }
+        </style>
+
+    </head>
+    <body>
+        <div>
+            <div class="top-nav">
+                <a class="active" href="/"> Home </a>
+                <a href="/login"> Log In </a>
+                <a href="/search"> Search </a>
+            </div>
+        </div>
+        
+        <div>
+            <!-- pass data here -->
+
+            <form method="POST" action="/characterInfo">
+                <div>
+                    <button type="submit" class="favorite_button"> Favorite </button>
+                </div>
+            </form>
+        </div>
+        <h1>Page will soon be populated!</h1>
+    </body>
+</html>
