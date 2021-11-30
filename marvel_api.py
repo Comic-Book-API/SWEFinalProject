@@ -138,6 +138,7 @@ def getSeries(search, offset):
 
 
 def getCharacter(search, offset):
+    imgUnavailable = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg"
     data_results = getJSONData(
         "nameStartsWith",
         "https://gateway.marvel.com/v1/public/characters",
@@ -161,7 +162,10 @@ def getCharacter(search, offset):
         id.append(data_results[i]["id"])
         imgPath = data_results[i]["thumbnail"]["path"]
         imgLink = imgPath + "/standard_fantastic.jpg"
-        img.append(imgLink)
+        if imgLink == imgUnavailable:
+            img.append("/static/comic error message.png")
+        else:
+            img.append(imgLink)
     return (id, name, description, img)
 
 
