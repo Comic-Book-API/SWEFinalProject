@@ -135,11 +135,10 @@
     <div class="center">
         <div>
             {% for i in titles %}
-            <li>
-                <h2>{{titles[loop.index0]}} </h2>
-            </li>
+                <h2><img src="{{imgLinks[loop.index0]}}" height="512px" width="512px" /></h2>
             <br>
-            <li><img src="{{imgLinks[loop.index0]}}" height="512px" width="512px" /></li>
+            Name: {{titles[loop.index0]}} <br>
+            Description: {{descriptions[loop.index0]}}
             {% endfor %}
         </div>
     </div>

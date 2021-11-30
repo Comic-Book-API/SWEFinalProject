@@ -30,12 +30,16 @@ urlAddOn = f"?ts={ts}&apikey={public_key}&hash={hashhex}"
 
 
 def getJSONData(searchField, url, search, offset):
+    if searchField == "nameStartsWith":
+        limit = 100
+    else:
+        limit = 10
     params = {
         "ts": ts,
         "apikey": public_key,
         "hash": hashhex,
         f"{searchField}": search,
-        "limit": 1,
+        "limit": limit,
         "offset": offset,
     }
     endpoint_request = requests.get(url=url, params=params)
@@ -53,23 +57,48 @@ def getComicByTitle(search, offset):
     if len(data_results) == 0:
         return False
     # Returns the title, the on sale date of the comic, a link to an image of the comic, and a list of collaborators who worked on the comic.
-    title = data_results[0]["title"]
-    onSaleDate = data_results[0]["dates"][0]["date"]
-    creators = data_results[0]["creators"]["items"]
+    imgUnavailable = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg"
+    title = []
+    onSaleDate = []
     creatorList = []
-    buyLink = data_results[0]["urls"][0]["url"]
+    buyLink = []
+    img = []
+    creatorArr = []
 
     # For the API, we have to change the link returned by the json or else it gives a permission denied error. To do this, we just append a string onto the end that Marvel has pre-defined. standard_fantastic is the version of the img we chose.
     imgPath = data_results[0]["thumbnail"]["path"]
     imgLink = imgPath + "/standard_fantastic.jpg"
 
-    for i in range(len(creators)):
-        creatorList.append(data_results[0]["creators"]["items"][i]["name"])
+    if len(data_results) >= 10:
+        for i in range(10):
+            creatorList = []
+            title.append(data_results[i]["title"])
+            onSaleDate.append(data_results[i]["dates"][0]["date"])
+            buyLink.append(data_results[i]["urls"][0]["url"])
+            imgPath = data_results[i]["thumbnail"]["path"]
+            imgLink = imgPath + "/standard_fantastic.jpg"
+            if imgLink == imgUnavailable:
+                img.append("/static/comic error message.png")
+            else:
+                img.append(imgLink)
+            creators = data_results[i]["creators"]["items"]
+            for j in range(len(creators)):
+                creatorList.append(data_results[i]["creators"]["items"][j]["name"])
+            creatorArr.append(creatorList)
 
-    returnArray = []
-    returnArray.append(title)
-    returnArray.append(onSaleDate)
-    return (title, creatorList, onSaleDate, imgLink, buyLink)
+    else:
+        for i in range(len(data_results)):
+            title.append(data_results[i]["title"])
+            onSaleDate.append(data_results[i]["dates"][0]["date"])
+            buyLink.append(data_results[i]["urls"[0]["url"]])
+            imgPath = data_results[i]["thumbnail"]["path"]
+            imgLink = imgPath + "/standard_fantastic.jpg"
+            img.append(imgLink)
+            creators = data_results[i]["creators"]["items"]
+            for j in range(len(creators)):
+                creatorList.append(data_results[i]["creators"]["items"][j]["name"])
+            creatorArr.append(creatorList)
+    return (title, creatorArr, onSaleDate, img, buyLink)
 
 
 def getComicByCharacter(search, offset):
@@ -115,16 +144,25 @@ def getCharacter(search, offset):
         search,
         offset,
     )
+
+    name = []
+    description = []
+    id = []
+    img = []
     if len(data_results) == 0:
         return False
-    name = data_results[0]["name"]
-    description = data_results[0]["description"]
-    id = data_results[0]["id"]
 
-    imgPath = data_results[0]["thumbnail"]["path"]
-    imgLink = imgPath + "/standard_fantastic.jpg"
-
-    return (id, name, description, imgLink)
+    for i in range(len(data_results)):
+        name.append(data_results[i]["name"])
+        if data_results[i]["description"] == "":
+            description.append("No description available for this character.")
+        else:
+            description.append(data_results[i]["description"])
+        id.append(data_results[i]["id"])
+        imgPath = data_results[i]["thumbnail"]["path"]
+        imgLink = imgPath + "/standard_fantastic.jpg"
+        img.append(imgLink)
+    return (id, name, description, img)
 
 
 # Helper function to fetch the id of a creator to feed into the getComicByCreator function.
