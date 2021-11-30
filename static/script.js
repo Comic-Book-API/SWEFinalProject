@@ -4,7 +4,6 @@ function setCookie(title, img, saleDate, creatorList, buyLink, index) {
     document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
     
     document.cookie = result;
-    alert(document.cookie);
 }
 
 function getCookie() {
