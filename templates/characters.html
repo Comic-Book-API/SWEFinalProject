@@ -154,7 +154,7 @@
 
         <div class="center">
             <h2> Let's Get to Searching for Characters </h2>
-            <form method="POST" action="/characters" class="searchbox" style="margin: auto; max-width: 305px;">
+            <form method="POST" class="searchbox" style="margin: auto; max-width: 305px;">
                 <input type="text" placeholder="Search.." name="search">
                 <button type="submit"> Submit </button>
             </form>
@@ -164,7 +164,17 @@
     </div>
 
     <div>
+    <script>
+      function set_cookie(x){
+         document.cookie = "cindex=" + String(x) + ";";
+      }
+      function clear_cookie(){
+        document.cookie = "cindex=";
+      }
+    </script>
+        {% set cindex = -1%}
         {% for i in titles %}
+        {% set cindex = cindex + 1 %}
         <div class="container">
             <div class="image">
                 <h2><img src="{{imgLinks[loop.index0]}}" height="512px" width="512px" /></h2>
@@ -173,7 +183,7 @@
                 <h1>Name: {{titles[loop.index0]}}</h1>
                 <form>
                     <div>
-                        <button type="submit" class="favorite_button"> Favorite </button>
+                        <a href='/setfav'><button type="button" class="favorite_button" onclick=set_cookie('{{ ids[loop.index0] }}')> Favorite </button></a>
                     </div>
                 </form>
                 <h3>Description: {{descriptions[loop.index0]}}</h3>

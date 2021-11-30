@@ -6,7 +6,7 @@ import os
 import getpass
 from dotenv import find_dotenv, load_dotenv
 from cryptography.fernet import Fernet
-from flask_login import LoginManager, login_user, login_required
+from flask_login import LoginManager, login_user, login_required, current_user
 import flask_login
 import marvel_api as marvel
 
@@ -265,16 +265,6 @@ def search():
         )
 
 
-@app.route("/characterinfo", methods=["POST", "GET"])
-def characterinfo():
-    return flask.render_template("characterInfo.html")
-
-
-@app.route("/comicinfo", methods=["POST", "GET"])
-def comicinfo():
-    return flask.render_template("comicInfo.html")
-
-
 @app.route("/filter", methods=["POST"])
 def setFilter():
     choice = flask.request.form["option"]
@@ -330,24 +320,74 @@ def sign_in():
     return flask.render_template("login.html")
 
 
+@app.route("/characterinfo", methods=["POST", "GET"])
+def characterinfo():
+    return flask.render_template("characterInfo.html")
+
+@app.route("/setfav")
+def setfav():
+    cookies = flask.request.cookies
+    cindex = cookies.get("cindex")
+    if cindex:
+        if cindex != "":
+            # favorite button
+            # add cid to user favorites
+            user = current_user.get_id()
+            res = None
+            if user:
+                ret = add_character(user, cindex)
+                print("Added character return code : " + str(ret))
+                res = flask.render_template("favorite_success.html")
+            else:
+                print("favorite failure!")
+                res = flask.render_template("favorite_fail.html")
+            resp = flask.make_response(res)
+            resp.set_cookie("cindex", "", expires=0)
+            return resp
+    return flask.render_template("index.html")
+
 @app.route("/characters", methods=["POST", "GET"])
 def characters():
     if flask.request.method == "GET":
         return flask.render_template("characters.html")
     if flask.request.method == "POST":
+
+        # search bar
         search = flask.request.form["search"]
         if marvel.getCharacter(search, 0) != False:
-            (id, name, description, imgLink) = marvel.getCharacter(search, 0)
+            (ids, name, description, imgLink) = marvel.getCharacter(search, 0)
             return flask.render_template(
                 "characters.html",
                 titles=name,
                 imgLinks=imgLink,
                 descriptions=description,
-            )
+                ids=ids,
+                )
         flask.flash("Bad search parameters, please try again!")
         return flask.render_template(
             "characters.html", titles=[], imgLinks=[], descriptions=[]
-        )
+            )
+
+
+@app.route("/comicinfo", methods=["POST", "GET"])
+@app.route("/comicInfo", methods=["POST", "GET"])
+def comicinfo():
+    if flask.request.method == 'GET':
+        return flask.render_template("comicInfo.html")
+    if flask.request.method == "POST":
+        cookies = flask.request.cookies
+        cid = ""
+        for i in flask.request.cookies:
+            if i != "" and i != "session" and i != "id" and i != cindex:
+                cid = i
+                break
+        cid = cid.split("|").pop().split("/")[5]
+        user = current_user.get_id()
+        if user:
+            add_comic(user, cid)
+            return flask.render_template("favorite_success.html")
+        else:
+            return flask.render_template("favorite_fail.html")
 
 
 @app.route("/about")
