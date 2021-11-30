@@ -240,38 +240,21 @@ def search():
         return flask.render_template("search.html")
     if flask.request.method == "POST":
         search = flask.request.form["search"]
-        imgUnavailable = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg"
-        titleArr = []
-        imgArr = []
-        creatorArr = []
-        onSaleArr = []
-        buyLinkArr = []
-        for i in range(10):
-            if marvel.getComicByTitle(search, i) != False:
-                (
-                    title,
-                    creatorList,
-                    onSaleDate,
-                    imgLink,
-                    buyLink,
-                ) = marvel.getComicByTitle(search, i)
-                if imgLink == imgUnavailable:
-                    imgLink = "/static/comic error message.png"
-                titleArr.append(title)
-                imgArr.append(imgLink)
-                creatorArr.append(creatorList)
-                onSaleArr.append(onSaleDate)
-                buyLinkArr.append(buyLink)
-        if len(titleArr) == 0:
+
+        if marvel.getComicByTitle(search, 0) != False:
+            (title, creatorList, onSaleDate, img, buyLink) = marvel.getComicByTitle(
+                search, 0
+            )
+        if len(title) == 0:
             flask.flash("Bad search parameters, please try again!")
 
         return flask.render_template(
             "search.html",
-            titles=titleArr,
-            imgLinks=imgArr,
-            creators=creatorArr,
-            onSaleDates=onSaleArr,
-            buyLinks=buyLinkArr,
+            titles=title,
+            imgLinks=img,
+            creators=creatorList,
+            onSaleDates=onSaleDate,
+            buyLinks=buyLink,
         )
 
 
@@ -325,11 +308,9 @@ def sign_in():
         username = flask.request.form.get("username")
         password = flask.request.form.get("password")
         user = Account.query.filter_by(username=username).first()
-        print(username)
         if user:
             if password == decrypt(user.password):
                 user.authenticated = True
-                print(user)
                 flask_login.login_user(user)
                 flask.flash("Successfully logged in!")
                 return flask.redirect("/")
@@ -348,28 +329,24 @@ def characters():
         return flask.render_template("characters.html")
     if flask.request.method == "POST":
         search = flask.request.form["search"]
-        resultArr = []
-        resultArr2 = []
-        for i in range(10):
-            if marvel.getCharacter(search, i) != False:
-                (id, name, description, imgLink) = marvel.getCharacter(search, i)
-                if (
-                    imgLink
-                    == "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg"
-                ):
-                    imgLink = "/static/comic error message.png"
-                resultArr.append(name)
-                resultArr2.append(imgLink)
-        if len(resultArr) == 0:
+        if marvel.getCharacter(search, 0) != False:
+            (id, name, description, imgLink) = marvel.getCharacter(search, 0)
+        if len(name) == 0:
             flask.flash("Bad search parameters, please try again!")
+        if description[0] == " ":
+            description[0] = "no description available for this character."
+        for i in range(len(description)):
+            if description[i] == " ":
+                description[i] = "no description available for this character."
         return flask.render_template(
-            "characters.html", titles=resultArr, imgLinks=resultArr2
+            "characters.html", titles=name, imgLinks=imgLink, descriptions=description
         )
-    return flask.render_template("characters.html")
+
 
 @app.route("/about")
 def about():
     return flask.render_template("landingPage.html")
+
 
 @app.route("/comicInfo", methods=["POST", "GET"])
 def comicInfo():
