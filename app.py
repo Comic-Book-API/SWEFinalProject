@@ -251,7 +251,7 @@ def search():
                 onSaleDates=[],
                 buyLinks=[],
             )
-        if marvel.getComicByTitle(search, offset) != False:
+        elif marvel.getComicByTitle(search, offset) != False:
             (title, creatorList, onSaleDate, img, buyLink) = marvel.getComicByTitle(
                 search, offset
             )
@@ -263,6 +263,16 @@ def search():
                 creators=creatorList,
                 onSaleDates=onSaleDate,
                 buyLinks=buyLink,
+            )
+        else:
+            flask.flash("Bad search parameters, please try again!")
+            return flask.render_template(
+                "search.html",
+                titles=[],
+                imgLinks=[],
+                creators=[],
+                onSaleDates=[],
+                buyLinks=[],
             )
 
 
@@ -325,12 +335,13 @@ def sign_in():
 def characterinfo():
     return flask.render_template("characterInfo.html")
 
+
 # sets favorite character in a redirect, because there are multiple forms and it gets weird
 @app.route("/setfav")
 def setfav():
     cookies = flask.request.cookies
     cindex = cookies.get("cindex")
-    if cindex: # if the needed cookie exists
+    if cindex:  # if the needed cookie exists
         if cindex != "":
             # add cid to user favorites
             user = current_user.get_id()
@@ -343,9 +354,10 @@ def setfav():
                 print("favorite failure!")
                 res = flask.render_template("favorite_fail.html")
             resp = flask.make_response(res)
-            resp.set_cookie("cindex", "", expires=0) # clear the now un-needed cookie
+            resp.set_cookie("cindex", "", expires=0)  # clear the now un-needed cookie
             return resp
     return flask.render_template("index.html")
+
 
 # does NOT handle favorites for the characters, that is sent to /setfav because multiple forms
 # this is done by making the favorite button assign a cookie and redirecting to /setfav, because that is somehow the easiest way to do this
@@ -372,6 +384,7 @@ def characters():
             "characters.html", titles=[], imgLinks=[], descriptions=[]
         )
 
+
 # both app routes because both are referenced and it's best not to rock the boat for now
 @app.route("/comicinfo", methods=["POST", "GET"])
 @app.route("/comicInfo", methods=["POST", "GET"])
@@ -382,13 +395,17 @@ def comicinfo():
         # post occurs when the favorite button is pushed.
         cookies = flask.request.cookies
         cid = ""
-        for i in flask.request.cookies: # first cookie that isn't one of the corrowing known cookies, because for some reason we encode the data in the name of the cookie lol
+        for (
+            i
+        ) in (
+            flask.request.cookies
+        ):  # first cookie that isn't one of the corrowing known cookies, because for some reason we encode the data in the name of the cookie lol
             if i != "" and i != "session" and i != "id" and i != "cindex":
                 cid = i
                 break
-        cid = cid.split("|").pop().split("/")[5] # get the encoded data
+        cid = cid.split("|").pop().split("/")[5]  # get the encoded data
         user = current_user.get_id()
-        if user: # if the user exists, add the comic to their favorites
+        if user:  # if the user exists, add the comic to their favorites
             add_comic(user, cid)
             return flask.render_template("favorite_success.html")
         else:
@@ -419,7 +436,9 @@ def init_profile():
     links = []
     for comic_id in comics:
         if marvel.getComicById(comic_id):
-            (title, creatorList, onSaleDate, img, buyLink) = marvel.getComicById(comic_id)
+            (title, creatorList, onSaleDate, img, buyLink) = marvel.getComicById(
+                comic_id
+            )
             titles.append(title)
             creators.append(creatorList)
             imgs.append(img)
@@ -431,18 +450,19 @@ def init_profile():
 @app.route("/profile", methods=["POST", "GET"])
 def profile():
     args = init_profile()
-    print(args)
-    return flask.render_template("profile.html",
-                                 test='test',
-                                 username=flask_login.current_user.username,
-                                 fav_chars=decode_string(get_account_db_characters(flask_login.current_user.uid)),
-                                 fav_comics=decode_string(get_account_db_comics(flask_login.current_user.uid)),
-                                 titles=args[0],
-                                 creators=args[1],
-                                 imgs=args[2],
-                                 links=args[3],
-                                 )
+    return flask.render_template(
+        "profile.html",
+        test="test",
+        username=flask_login.current_user.username,
+        fav_chars=decode_string(
+            get_account_db_characters(flask_login.current_user.uid)
+        ),
+        fav_comics=decode_string(get_account_db_comics(flask_login.current_user.uid)),
+        titles=args[0],
+        creators=args[1],
+        imgs=args[2],
+        links=args[3],
+    )
 
 
 app.run(host="0.0.0.0", port=os.getenv("PORT", 8080), use_reloader=True)
-

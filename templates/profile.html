@@ -31,9 +31,10 @@
             <a class="nav-link" href="/about">About Us</a>
           </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search for new comics" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          <form method="POST" action="/search" style="margin: auto; max-width: 305px;">
+            <input type="text" placeholder="Search for new comics" name="search" aria-label="Search">
+            <input type = "number" id = "offset" name = "offset" placeholder = "offset" min = "0" max = "1000">
+            <button type="submit"> Submit </button>
         </form>
       </div>
     </nav>
