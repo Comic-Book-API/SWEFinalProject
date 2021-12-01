@@ -347,7 +347,8 @@ def setfav():
             return resp
     return flask.render_template("index.html")
 
-
+# does NOT handle favorites for the characters, that is sent to /setfav because multiple forms
+# this is done by making the favorite button assign a cookie and redirecting to /setfav, because that is somehow the easiest way to do this
 @app.route("/characters", methods=["POST", "GET"])
 def characters():
     if flask.request.method == "GET":
