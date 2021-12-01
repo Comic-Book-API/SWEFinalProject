@@ -366,9 +366,13 @@ def characters():
     if flask.request.method == "GET":
         return flask.render_template("characters.html")
     if flask.request.method == "POST":
-
         # search bar
         search = flask.request.form["search"]
+        if search == "":
+            flask.flash("Bad search parameters, please try again!")
+            return flask.render_template(
+                "characters.html", titles=[], imgLinks=[], descriptions=[]
+            )
         if marvel.getCharacter(search, 0) != False:
             (ids, name, description, imgLink) = marvel.getCharacter(search, 0)
             return flask.render_template(
