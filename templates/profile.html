@@ -42,6 +42,7 @@
       <div class="mask gradient-card align-items-center">
         <div class="container d-flex justify-content-center my-4 mb-5">
           <div id="mobile-box">
+            <h1>Favorite Comics</h1>
             {% for i in range(fav_comics|length) %}
             <div class="card">
               <div class="view">
@@ -55,9 +56,25 @@
               </div>
             </div>
             {% endfor %}
+            <h1>Favorite Characters</h1>
+            {% for i in range(fav_chars|length) %}
+            <div class="card">
+              <div class="view">
+                <img class="card-img-top" src={{charImg[i]}} alt="Card image cap">
+                <a href="https://i.scdn.co/image/ab67616d0000b2730272b80e7311f476905c440e" target="_blank">
+                  <div class="mask gradient-card"></div>
+                </a>
+              </div>
+              <div class="card-body text-center">
+                <h5 class="h5 font-weight-bold">{{name[i]}}</h5>
+                {{description[i]}}
+              </div>
+            </div>
+            {% endfor %}
           </div>
         </div>
       </div>
     </div>
+  </div>
   </body>
 </html>

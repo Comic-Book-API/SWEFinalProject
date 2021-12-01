@@ -428,7 +428,6 @@ def characterInfo():
 
 
 def init_profile():
-    characters = decode_string(get_account_db_characters(flask_login.current_user.uid))
     comics = decode_string(get_account_db_comics(flask_login.current_user.uid))
     titles = []
     creators = []
@@ -447,9 +446,25 @@ def init_profile():
     return args
 
 
+def init_profile2():
+    characters = decode_string(get_account_db_characters(flask_login.current_user.uid))
+    names = []
+    descriptions = []
+    imgs = []
+    for character_id in characters:
+        if marvel.getCharacterById(character_id):
+            (name, description, imgLinks) = marvel.getCharacterById(character_id)
+            names.append(name)
+            descriptions.append(description)
+            imgs.append(imgLinks)
+    args = [names, descriptions, imgs]
+    return args
+
+
 @app.route("/profile", methods=["POST", "GET"])
 def profile():
-    args = init_profile()
+    comics = init_profile()
+    characters = init_profile2()
     return flask.render_template(
         "profile.html",
         test="test",
@@ -458,10 +473,13 @@ def profile():
             get_account_db_characters(flask_login.current_user.uid)
         ),
         fav_comics=decode_string(get_account_db_comics(flask_login.current_user.uid)),
-        titles=args[0],
-        creators=args[1],
-        imgs=args[2],
-        links=args[3],
+        titles=comics[0],
+        creators=comics[1],
+        imgs=comics[2],
+        links=comics[3],
+        name=characters[0],
+        description=characters[1],
+        charImg=characters[2],
     )
 
 
