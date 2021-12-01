@@ -99,7 +99,7 @@ def getComicByTitle(search, offset):
         for i in range(len(data_results)):
             title.append(data_results[i]["title"])
             onSaleDate.append(data_results[i]["dates"][0]["date"])
-            buyLink.append(data_results[i]["urls"[0]["url"]])
+            buyLink.append(data_results[i]["urls"][0]["url"])
             imgPath = data_results[i]["thumbnail"]["path"]
             imgLink = imgPath + "/standard_fantastic.jpg"
             img.append(imgLink)
@@ -196,8 +196,8 @@ def getComicById(id):
     creatorList = []
     title = data_results[0]["title"]
     onSaleDate = data_results[0]["dates"][0]["date"]
-    buyLink = data_results([0]["urls"][0]["url"])
-    imgPath = data_results([0]["thumbnail"]["path"])
+    buyLink = data_results[0]["urls"][0]["url"]
+    imgPath = data_results[0]["thumbnail"]["path"]
     imgLink = imgPath + "/standard_fantastic.jpg"
     if imgLink == imgUnavailable:
         img = "/static/comic error message.png"
@@ -206,7 +206,7 @@ def getComicById(id):
     creators = data_results[0]["creators"]["items"]
     for i in range(len(creators)):
         creatorList.append(data_results[0]["creators"]["items"][i]["name"])
-    return (title, creatorList, onSaleDate, img, buyLink)
+    return title, creatorList, onSaleDate, img, buyLink
 
 
 def getCharacterById(id):
@@ -229,4 +229,4 @@ def getCharacterById(id):
     else:
         img = imgLink
 
-    return (name, description, imgLink)
+    return name, description, imgLink
