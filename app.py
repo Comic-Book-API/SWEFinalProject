@@ -240,10 +240,20 @@ def search():
         return flask.render_template("search.html")
     if flask.request.method == "POST":
         search = flask.request.form["search"]
-
-        if marvel.getComicByTitle(search, 0) != False:
+        offset = flask.request.form["offset"]
+        if search == "":
+            flask.flash("Bad search parameters, please try again!")
+            return flask.render_template(
+                "search.html",
+                titles=[],
+                imgLinks=[],
+                creators=[],
+                onSaleDates=[],
+                buyLinks=[],
+            )
+        if marvel.getComicByTitle(search, offset) != False:
             (title, creatorList, onSaleDate, img, buyLink) = marvel.getComicByTitle(
-                search, 0
+                search, offset
             )
 
             return flask.render_template(
@@ -254,15 +264,6 @@ def search():
                 onSaleDates=onSaleDate,
                 buyLinks=buyLink,
             )
-        flask.flash("Bad search parameters, please try again!")
-        return flask.render_template(
-            "search.html",
-            titles=[],
-            imgLinks=[],
-            creators=[],
-            onSaleDates=[],
-            buyLinks=[],
-        )
 
 
 @app.route("/filter", methods=["POST"])
