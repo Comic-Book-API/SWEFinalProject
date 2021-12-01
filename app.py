@@ -325,14 +325,13 @@ def sign_in():
 def characterinfo():
     return flask.render_template("characterInfo.html")
 
-
+# sets favorite character in a redirect, because there are multiple forms and it gets weird
 @app.route("/setfav")
 def setfav():
     cookies = flask.request.cookies
     cindex = cookies.get("cindex")
-    if cindex:
+    if cindex: # if the needed cookie exists
         if cindex != "":
-            # favorite button
             # add cid to user favorites
             user = current_user.get_id()
             res = None
@@ -344,7 +343,7 @@ def setfav():
                 print("favorite failure!")
                 res = flask.render_template("favorite_fail.html")
             resp = flask.make_response(res)
-            resp.set_cookie("cindex", "", expires=0)
+            resp.set_cookie("cindex", "", expires=0) # clear the now un-needed cookie
             return resp
     return flask.render_template("index.html")
 
@@ -366,27 +365,29 @@ def characters():
                 descriptions=description,
                 ids=ids,
             )
+        # searchbar failure
         flask.flash("Bad search parameters, please try again!")
         return flask.render_template(
             "characters.html", titles=[], imgLinks=[], descriptions=[]
         )
 
-
+# both app routes because both are referenced and it's best not to rock the boat for now
 @app.route("/comicinfo", methods=["POST", "GET"])
 @app.route("/comicInfo", methods=["POST", "GET"])
 def comicinfo():
     if flask.request.method == "GET":
         return flask.render_template("comicInfo.html")
     if flask.request.method == "POST":
+        # post occurs when the favorite button is pushed.
         cookies = flask.request.cookies
         cid = ""
-        for i in flask.request.cookies:
-            if i != "" and i != "session" and i != "id" and i != index:
+        for i in flask.request.cookies: # first cookie that isn't one of the corrowing known cookies, because for some reason we encode the data in the name of the cookie lol
+            if i != "" and i != "session" and i != "id" and i != "cindex":
                 cid = i
                 break
-        cid = cid.split("|").pop().split("/")[5]
+        cid = cid.split("|").pop().split("/")[5] # get the encoded data
         user = current_user.get_id()
-        if user:
+        if user: # if the user exists, add the comic to their favorites
             add_comic(user, cid)
             return flask.render_template("favorite_success.html")
         else:
