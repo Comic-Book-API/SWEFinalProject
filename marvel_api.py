@@ -33,15 +33,16 @@ last_call_time = 0
 # function to get data from the API.
 # It uses a timer to make sure that it never calls more than once
 def get_data(url, params):
-    print("get_data_loop")
     global last_call_time
     if time.time() - last_call_time > 0.5:
 
         endpoint_request = requests.get(url=url, params=params)
         last_call_time = time.time()
         data = endpoint_request.json()
-        print("get_data_loop end")
-        if isinstance(data, int): # sometimes the marvel api just sends back an int for the comic or character id. Server side bug?
+        print("made an api call")
+        if isinstance(
+            data, int
+        ):  # sometimes the marvel api just sends back an int for the comic or character id. Server side bug?
             print("!!GETDATA GOT INT!!")
             return get_data(url, params)
         return data

@@ -257,7 +257,9 @@ def search():
             )
 
     if title == False:
-        flask.flash("Marvel API is down. Please try again later.")
+        flask.flash(
+            "Either bad search parameters or Marvel API is down. Please try again later."
+        )
         return flask.render_template(
             "search.html",
             titles=[],
@@ -399,10 +401,16 @@ def characters():
 
         if ids != False:
             return flask.render_template(
-                "characters.html", titles=name, imgLinks=imgLink, descriptions=description, ids=ids
+                "characters.html",
+                titles=name,
+                imgLinks=imgLink,
+                descriptions=description,
+                ids=ids,
             )
         # searchbar failure
-        flask.flash("Bad search parameters, please try again!")
+        flask.flash(
+            "Either bad search parameters or Marvel API is down. Please try again later."
+        )
         return flask.render_template(
             "characters.html", titles=[], imgLinks=[], descriptions=[]
         )
