@@ -255,6 +255,16 @@ def search():
         search, offset
     )
 
+    if title == False:
+        flask.flash("Marvel API is down. Please try again later.")
+        return flask.render_template(
+            "search.html",
+            titles=[],
+            imgLinks=[],
+            creators=[],
+            onSaleDates=[],
+            buyLinks=[],
+        )
     return flask.render_template(
         "search.html",
         titles=title,
@@ -384,10 +394,11 @@ def characters():
                 "characters.html", titles=[], imgLinks=[], descriptions=[]
             )
 
-        if marvel.getCharacter(search, 0) != False:
-            (ids, name, description, imgLink) = marvel.getCharacter(search, 0)
+        (ids, name, description, imgLink) = marvel.getCharacter(search, 0)
+
+        if ids != False:
             return flask.render_template(
-                "characters.html", titles=[], imgLinks=[], descriptions=[]
+                "characters.html", titles=name, imgLinks=imgLink, descriptions=description, ids=ids
             )
         return flask.render_template(
             "characters.html", titles=[], imgLinks=[], descriptions=[]
