@@ -19,8 +19,8 @@ We created our web application with HTML, CSS, JavaScript, and Python.
 
 #App.py:
 
-		inconsistent-return-statements:
-		changing /any/ of the returns we have set up breaks the app
+    inconsistent-return-statements:
+    changing /any/ of the returns we have set up breaks the app
 
     no-else-return:
     tried changing these to the proper format of 
