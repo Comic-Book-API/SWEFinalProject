@@ -256,24 +256,45 @@ def search():
                 search, offset
             )
 
-            return flask.render_template(
-                "search.html",
-                titles=title,
-                imgLinks=img,
-                creators=creatorList,
-                onSaleDates=onSaleDate,
-                buyLinks=buyLink,
-            )
-        else:
-            flask.flash("Bad search parameters, please try again!")
-            return flask.render_template(
-                "search.html",
-                titles=[],
-                imgLinks=[],
-                creators=[],
-                onSaleDates=[],
-                buyLinks=[],
-            )
+    if title == False:
+        flask.flash("Marvel API is down. Please try again later.")
+        return flask.render_template(
+            "search.html",
+            titles=[],
+            imgLinks=[],
+            creators=[],
+            onSaleDates=[],
+            buyLinks=[],
+        )
+    return flask.render_template(
+        "search.html",
+        titles=title,
+        imgLinks=img,
+        creators=creatorList,
+        onSaleDates=onSaleDate,
+        buyLinks=buyLink,
+    )
+    # else:
+    #     pass
+    #     flask.flash("Bad search parameters, please try again!")
+    #     return flask.render_template(
+    #         "search.html",
+    #         titles=[],
+    #         imgLinks=[],
+    #         creators=[],
+    #         onSaleDates=[],
+    #         buyLinks=[],
+    #     )
+    #     flask.flash(
+    #         "The API service may be down. Please try again at a later date!"
+    #     )
+    #     return flask.render_template(
+    #         "search.html",
+    #         titles=[],
+    #         imgLinks=[],
+    #         creators=[],
+    #         onSaleDates=[],
+    #     )
 
 
 @app.route("/filter", methods=["POST"])
@@ -373,14 +394,12 @@ def characters():
             return flask.render_template(
                 "characters.html", titles=[], imgLinks=[], descriptions=[]
             )
-        if marvel.getCharacter(search, 0) != False:
-            (ids, name, description, imgLink) = marvel.getCharacter(search, 0)
+
+        (ids, name, description, imgLink) = marvel.getCharacter(search, 0)
+
+        if ids != False:
             return flask.render_template(
-                "characters.html",
-                titles=name,
-                imgLinks=imgLink,
-                descriptions=description,
-                ids=ids,
+                "characters.html", titles=name, imgLinks=imgLink, descriptions=description, ids=ids
             )
         # searchbar failure
         flask.flash("Bad search parameters, please try again!")

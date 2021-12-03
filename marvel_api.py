@@ -28,6 +28,27 @@ hashhex = hash.hexdigest()
 
 urlAddOn = f"?ts={ts}&apikey={public_key}&hash={hashhex}"
 
+last_call_time = 0
+
+# function to get data from the API.
+# It uses a timer to make sure that it never calls more than once
+def get_data(url, params):
+    print("get_data_loop")
+    global last_call_time
+    if time.time() - last_call_time > 0.5:
+
+        endpoint_request = requests.get(url=url, params=params)
+        last_call_time = time.time()
+        data = endpoint_request.json()
+        print("get_data_loop end")
+        if isinstance(data, int): # sometimes the marvel api just sends back an int for the comic or character id. Server side bug?
+            print("!!GETDATA GOT INT!!")
+            return get_data(url, params)
+        return data
+    else:
+        time.sleep(0.5)
+        return get_data(url, params)
+
 
 def getJSONData(searchField, url, search, offset):
     if searchField == "nameStartsWith":
@@ -51,10 +72,12 @@ def getJSONData(searchField, url, search, offset):
             "offset": offset,
             "noVariants": True,
         }
-    endpoint_request = requests.get(url=url, params=params)
-    data = endpoint_request.json()
-    data_results = data["data"]["results"]
-    return data_results
+    data = get_data(url=url, params=params)
+    try:
+        data_results = data["data"]["results"]
+        return data_results
+    except KeyError:
+        return False
 
 
 def getComicByTitle(search, offset):
@@ -62,9 +85,12 @@ def getComicByTitle(search, offset):
         "titleStartsWith", "https://gateway.marvel.com/v1/public/comics", search, offset
     )
 
+    if data_results == False:
+        return (False, False, False, False, False)
+
     # Catch out of bounds error
     if len(data_results) == 0:
-        return False
+        return (False, False, False, False, False)
     # Returns the title, the on sale date of the comic, a link to an image of the comic, and a list of collaborators who worked on the comic.
     imgUnavailable = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg"
     title = []
@@ -116,6 +142,8 @@ def getComicByCharacter(search, offset):
     data_results = getJSONData(
         "characters", "https://gateway.marvel.com/v1/public/comics", id, offset
     )
+    if data_results == False:
+        return (False, False, False, False, False)
 
     title = data_results[0]["title"]
 
@@ -128,6 +156,8 @@ def getComicByCreator(search, offset):
     data_results = getJSONData(
         "creators", "https://gateway.marvel.com/v1/public/comics", creator, offset
     )
+    if data_results == False:
+        return (False, False, False, False, False)
 
     title = data_results[0]["title"]
 
@@ -139,6 +169,8 @@ def getSeries(search, offset):
     data_results = getJSONData(
         "titleStartsWith", "https://gateway.marvel.com/v1/public/series", search, offset
     )
+    if data_results == False:
+        return (False, False, False, False, False)
     titleList = []
     for i in range(len(data_results)):
         titleList.append(data_results[i]["title"])
@@ -154,13 +186,15 @@ def getCharacter(search, offset):
         search,
         offset,
     )
+    if data_results == False:
+        return (False, False, False, False)
 
     name = []
     description = []
     id = []
     img = []
     if len(data_results) == 0:
-        return False
+        return (False, False, False, False)
 
     for i in range(len(data_results)):
         name.append(data_results[i]["name"])
@@ -183,16 +217,21 @@ def getCreatorID(search):
     data_results = getJSONData(
         "nameStartsWith", "https://gateway.marvel.com/v1/public/creators", search
     )
+    if data_results == False:
+        return (False, False, False, False, False)
     return data_results[0]["id"]
 
 
 def getComicById(id):
     url = f"https://gateway.marvel.com/v1/public/comics/{id}"
     imgUnavailable = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg"
-    params = {"ts": ts, "apikey": public_key, "hash": hashhex, "comicid": id}
-    endpoint_request = requests.get(url=url, params=params)
-    data = endpoint_request.json()
-    data_results = data["data"]["results"]
+    params = {"ts": ts, "apikey": public_key, "hash": hashhex, "comicId": id}
+    data = get_data(url=url, params=params)
+    try:
+        data_results = data["data"]["results"]
+    except:
+        print(data)
+        return (False, False, False, False, False)
     creatorList = []
     title = data_results[0]["title"]
     onSaleDate = data_results[0]["dates"][0]["date"]
@@ -212,10 +251,12 @@ def getComicById(id):
 def getCharacterById(id):
     url = f"https://gateway.marvel.com/v1/public/characters/{id}"
     imgUnavailable = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg"
-    params = {"ts": ts, "apikey": public_key, "hash": hashhex, "comicid": id}
-    endpoint_request = requests.get(url=url, params=params)
-    data = endpoint_request.json()
-    data_results = data["data"]["results"]
+    params = {"ts": ts, "apikey": public_key, "hash": hashhex, "characterId": id}
+    data = get_data(url=url, params=params)
+    try:
+        data_results = data["data"]["results"]
+    except KeyError:
+        return (False, False, False)
 
     name = data_results[0]["name"]
     if data_results[0]["description"] == "":
