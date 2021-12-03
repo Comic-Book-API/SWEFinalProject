@@ -270,4 +270,4 @@ def getCharacterById(id):
     else:
         img = imgLink
 
-    return name, description, img
+    return name, description, imgLink

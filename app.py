@@ -251,9 +251,10 @@ def search():
                 onSaleDates=[],
                 buyLinks=[],
             )
-    (title, creatorList, onSaleDate, img, buyLink) = marvel.getComicByTitle(
-        search, offset
-    )
+        elif marvel.getComicByTitle(search, offset) != False:
+            (title, creatorList, onSaleDate, img, buyLink) = marvel.getComicByTitle(
+                search, offset
+            )
 
     if title == False:
         flask.flash("Marvel API is down. Please try again later.")
@@ -400,6 +401,8 @@ def characters():
             return flask.render_template(
                 "characters.html", titles=name, imgLinks=imgLink, descriptions=description, ids=ids
             )
+        # searchbar failure
+        flask.flash("Bad search parameters, please try again!")
         return flask.render_template(
             "characters.html", titles=[], imgLinks=[], descriptions=[]
         )
@@ -458,7 +461,6 @@ def init_profile():
             (title, creatorList, onSaleDate, img, buyLink) = marvel.getComicById(
                 comic_id
             )
-            print(title)
             titles.append(title)
             creators.append(creatorList)
             imgs.append(img)
@@ -475,7 +477,6 @@ def init_profile2():
     for character_id in characters:
         if marvel.getCharacterById(character_id):
             (name, description, imgLinks) = marvel.getCharacterById(character_id)
-            print(name)
             names.append(name)
             descriptions.append(description)
             imgs.append(imgLinks)
