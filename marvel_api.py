@@ -35,23 +35,21 @@ last_call_time = 0
 
 def get_data(url, params):
     """# function to get data from the API.
-# It uses a timer to make sure that it never calls more than once"""
+    # It uses a timer to make sure that it never calls more than once"""
     global last_call_time
-    if time.time() - last_call_time > 0.5:
+    if time.time() - last_call_time > 0.2:
 
         endpoint_request = requests.get(url=url, params=params)
         last_call_time = time.time()
         data = endpoint_request.json()
         print("made an api call")
-        if isinstance(
-                data, int
-        ):  # sometimes the marvel api just sends back an
+        if isinstance(data, int):  # sometimes the marvel api just sends back an
             # int for the comic or character id. Server side bug?
             print("!!GETDATA GOT INT!!")
             return get_data(url, params)
         return data
     else:
-        time.sleep(0.5)
+        time.sleep(0.2)
         return get_data(url, params)
 
 
@@ -86,7 +84,7 @@ def get_json_data(search_field, url, search, offset):
         return False
 
 
-def get_comic_by_title(search, offset):
+def getComicByTitle(search, offset):
     """returns comic by title if it exists"""
     data_results = get_json_data(
         "titleStartsWith", "https://gateway.marvel.com/v1/public/comics", search, offset
@@ -101,8 +99,7 @@ def get_comic_by_title(search, offset):
     # Returns the title, the on sale date of the comic,
     # a link to an image of the comic, and a list of
     # collaborators who worked on the comic.
-    img_unavailable = \
-        "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg"
+    img_unavailable = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg"
     title = []
     on_sale_date = []
     creator_list = []
@@ -149,11 +146,11 @@ def get_comic_by_title(search, offset):
     return title, creator_arr, on_sale_date, img, buy_link
 
 
-def get_comic_by_character(search, offset):
+def getComicByCharacter(search, offset):
     """Because the parameter must be a character ID, we have to make a call to
     # getCharacters so we can have the ID of the search query. From there,
     # it's passed into the parameters to perform the search"""
-    (local_id, name, description, img_link) = get_character(search, 0)
+    (local_id, name, description, img_link) = getCharacter(search, 0)
     data_results = get_json_data(
         "characters", "https://gateway.marvel.com/v1/public/comics", local_id, offset
     )
@@ -162,14 +159,14 @@ def get_comic_by_character(search, offset):
 
     title = data_results[0]["title"]
 
-    return get_comic_by_title(title, offset)
+    return getComicByTitle(title, offset)
 
 
-def get_comic_by_creator(search, offset):
+def getComicByCreator(search, offset):
     """# We can't search for the creator by name.
     # It has to be by ID, so we need to call the helper function that
     will return the creator id of the search query/"""
-    creator = get_creator_id(search)
+    creator = getCreatorId(search)
     data_results = get_json_data(
         "creators", "https://gateway.marvel.com/v1/public/comics", creator, offset
     )
@@ -178,10 +175,10 @@ def get_comic_by_creator(search, offset):
 
     title = data_results[0]["title"]
 
-    return get_comic_by_title(title, offset)
+    return getComicByTitle(title, offset)
 
 
-def get_series(search, offset):
+def getSeries(search, offset):
     """# Not sure what we're going to do with this yet,
     but it doesn't hurt to include it."""
     data_results = get_json_data(
@@ -196,10 +193,9 @@ def get_series(search, offset):
     return title_list
 
 
-def get_character(search, offset):
+def getCharacter(search, offset):
     """core functionality searching method for characters"""
-    img_unavailable = \
-        "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg"
+    img_unavailable = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg"
     data_results = get_json_data(
         "nameStartsWith",
         "https://gateway.marvel.com/v1/public/characters",
@@ -232,7 +228,7 @@ def get_character(search, offset):
     return local_id, name, description, img
 
 
-def get_creator_id(search):
+def getCreatorId(search):
     """# Helper function to fetch the id of a creator
     to feed into the get_comic_by_creator function."""
     data_results = get_json_data(
@@ -243,13 +239,12 @@ def get_creator_id(search):
     return data_results[0]["id"]
 
 
-def get_comic_by_id(inp_id):
+def getComicById(inp_id):
     """searching method based on user inputted comic id.
-        checks for missing info from marvel api,
-        and fills in placeholder data for it"""
+    checks for missing info from marvel api,
+    and fills in placeholder data for it"""
     url = f"https://gateway.marvel.com/v1/public/comics/{inp_id}"
-    img_unavailable = \
-        "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg"
+    img_unavailable = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg"
     params = {"ts": TS, "apikey": public_key, "hash": HASHHEX, "comicId": inp_id}
     data = get_data(url=url, params=params)
     try:
@@ -273,13 +268,12 @@ def get_comic_by_id(inp_id):
     return title, creator_list, on_sale_date, img, buy_link
 
 
-def get_character_by_id(inp_id):
+def getCharacterById(inp_id):
     """searching method based on user inputted character id.
     checks for missing info from marvel api,
     and fills in placeholder data for it"""
     url = f"https://gateway.marvel.com/v1/public/characters/{inp_id}"
-    img_unavailable = \
-        "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg"
+    img_unavailable = "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/standard_fantastic.jpg"
     params = {"ts": TS, "apikey": public_key, "hash": HASHHEX, "characterId": inp_id}
     data = get_data(url=url, params=params)
     try:
