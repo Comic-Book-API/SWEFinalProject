@@ -53,14 +53,20 @@ def getJSONData(searchField, url, search, offset):
         }
     endpoint_request = requests.get(url=url, params=params)
     data = endpoint_request.json()
-    data_results = data["data"]["results"]
-    return data_results
+    try:
+        data_results = data["data"]["results"]
+        return data_results
+    except:
+        return False
 
 
 def getComicByTitle(search, offset):
     data_results = getJSONData(
         "titleStartsWith", "https://gateway.marvel.com/v1/public/comics", search, offset
     )
+
+    if data_results == False:
+        return False
 
     # Catch out of bounds error
     if len(data_results) == 0:
@@ -116,6 +122,8 @@ def getComicByCharacter(search, offset):
     data_results = getJSONData(
         "characters", "https://gateway.marvel.com/v1/public/comics", id, offset
     )
+    if data_results == False:
+        return False
 
     title = data_results[0]["title"]
 
@@ -128,6 +136,8 @@ def getComicByCreator(search, offset):
     data_results = getJSONData(
         "creators", "https://gateway.marvel.com/v1/public/comics", creator, offset
     )
+    if data_results == False:
+        return False
 
     title = data_results[0]["title"]
 
@@ -139,6 +149,8 @@ def getSeries(search, offset):
     data_results = getJSONData(
         "titleStartsWith", "https://gateway.marvel.com/v1/public/series", search, offset
     )
+    if data_results == False:
+        return False
     titleList = []
     for i in range(len(data_results)):
         titleList.append(data_results[i]["title"])
@@ -154,6 +166,8 @@ def getCharacter(search, offset):
         search,
         offset,
     )
+    if data_results == False:
+        return False
 
     name = []
     description = []
@@ -183,6 +197,8 @@ def getCreatorID(search):
     data_results = getJSONData(
         "nameStartsWith", "https://gateway.marvel.com/v1/public/creators", search
     )
+    if data_results == False:
+        return False
     return data_results[0]["id"]
 
 
@@ -192,7 +208,10 @@ def getComicById(id):
     params = {"ts": ts, "apikey": public_key, "hash": hashhex, "comicid": id}
     endpoint_request = requests.get(url=url, params=params)
     data = endpoint_request.json()
-    data_results = data["data"]["results"]
+    try:
+        data_results = data["data"]["results"]
+    except:
+        return False
     creatorList = []
     title = data_results[0]["title"]
     onSaleDate = data_results[0]["dates"][0]["date"]
@@ -215,7 +234,10 @@ def getCharacterById(id):
     params = {"ts": ts, "apikey": public_key, "hash": hashhex, "comicid": id}
     endpoint_request = requests.get(url=url, params=params)
     data = endpoint_request.json()
-    data_results = data["data"]["results"]
+    try:
+        data_results = data["data"]["results"]
+    except:
+        return False
 
     name = data_results[0]["name"]
     if data_results[0]["description"] == "":
@@ -229,4 +251,4 @@ def getCharacterById(id):
     else:
         img = imgLink
 
-    return name, description, imgLink
+    return name, description, img
