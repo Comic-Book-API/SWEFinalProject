@@ -16,7 +16,10 @@ We have implemented our own crypto encryption to keep our users' password/accoun
 
 We created our web application with HTML, CSS, JavaScript, and Python.
 
+NOTE 12/3/2021:
+A change was made to the Marvel Api so that if we made calls in quick succession, then the app breaks. How we had it before was we made two calls for every search. One to make sure the call was valid, and the other to actually return the data. This was fixed by moving the error checking to the api.app side of things, but the other issue was the profile page using a call for every thing in the user's favorited list. To get around this, we made a pipeline that didn't push data through immediately. Instead, it has it so an API call is made every .2 seconds so data is actually returned. This wouldn't be an issue if it wasn't for the other bug with the api itself, which is that when you put in the id of an individual character or comic, it would sometimes return the id back to the user instead of the data in the json. To get around this, we performed a check to see if the data being passed back was an int, and if it was, then it would run the same function again. This on top of the app making an api call every .2 seconds would mean the profile page takes a lot longer to load up than on the presentation. This was our solution to the changes made to the API.
 
+FORMATTING NOTES: 
 #App.py:
 
     inconsistent-return-statements:
