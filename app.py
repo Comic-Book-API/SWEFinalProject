@@ -10,6 +10,7 @@ from flask_login import LoginManager, login_user, login_required, current_user
 import flask_login
 import marvel_api as marvel
 
+
 app = flask.Flask(__name__)
 app.secret_key = "this is the most secretive key in the universe!!!"
 
@@ -78,7 +79,6 @@ db.create_all()
 db.session.commit()
 
 
-
 def encrypt(word):
     """# returns encrypted hash"""
     word = word.encode("UTF-8")
@@ -89,7 +89,7 @@ def encrypt(word):
 
 def decrypt(local_hash):
     """# decrypts the given hash, returning the strign which was originally encrypted"""
-    local_hash = hash.encode("UTF-8")
+    local_hash = local_hash.encode("UTF-8")
     word = encryption_engine.decrypt(local_hash)
     word = word.decode("UTF-8")
     return word
@@ -97,8 +97,8 @@ def decrypt(local_hash):
 
 def add_account(username, password):
     """# adds a new account to the database.
-# Make sure password is encrypted!!
-# returns 0 if successful, -1 if the username already exists"""
+    # Make sure password is encrypted!!
+    # returns 0 if successful, -1 if the username already exists"""
     new_acc = Account(username=username, password=password, comics="", characters="")
     test_acc = Account.query.filter_by(username=username).first()
     if test_acc is not None:
@@ -111,8 +111,8 @@ def add_account(username, password):
 
 def remove_comic(uid, comic_id):
     """
-# removes comic from the comics entry for the given user
-# returns 0 if successful, -1 if the comic could not be found"""
+    # removes comic from the comics entry for the given user
+    # returns 0 if successful, -1 if the comic could not be found"""
     comics = decode_string(get_account_db_comics(uid))
     if comics.count(comic_id) == 0:
         return -1
@@ -124,7 +124,7 @@ def remove_comic(uid, comic_id):
 
 def remove_character(uid, character_id):
     """# removes character from the characters entry for the given user
-# returns 0 if successful, -1 if the entry could not be found"""
+    # returns 0 if successful, -1 if the entry could not be found"""
     local_characters = decode_string(get_account_db_characters(uid))
     if local_characters.count(character_id) == 0:
         return -1
@@ -136,8 +136,8 @@ def remove_character(uid, character_id):
 
 def add_comic(uid, comic_id):
     """# adds comic from the comics entry for the given user
-# returns 0 if successful,
-# -1 if the entry could not be added because the max has been reached, and -2 if the entry is already present"""
+    # returns 0 if successful,
+    # -1 if the entry could not be added because the max has been reached, and -2 if the entry is already present"""
     comics = decode_string(get_account_db_comics(uid))
     if len(comics) >= 20:
         return -1
@@ -206,7 +206,7 @@ def encode_string(id_list):
 
 def uid_by_username(username):
     """# returns the UID of the given username.
-# returns -1 if the username doesn't exist in the database."""
+    # returns -1 if the username doesn't exist in the database."""
     acc = Account.query.filter_by(username=username).first()
     if acc is None:
         return -1
@@ -395,10 +395,10 @@ def setfav():
 @app.route("/characters", methods=["POST", "GET"])
 def characters():
     """# does NOT handle favorites for the characters, that is sent to
-# /setfav because multiple forms
-# this is done by making the favorite button assign a
-# cookie and redirecting to /setfav,
-# because that is somehow the easiest way to do this"""
+    # /setfav because multiple forms
+    # this is done by making the favorite button assign a
+    # cookie and redirecting to /setfav,
+    # because that is somehow the easiest way to do this"""
     if flask.request.method == "GET":
         return flask.render_template("characters.html")
     if flask.request.method == "POST":
@@ -429,7 +429,6 @@ def characters():
         )
 
 
-
 @app.route("/comicinfo", methods=["POST", "GET"])
 @app.route("/comicInfo", methods=["POST", "GET"])
 def comicinfo():
@@ -441,9 +440,9 @@ def comicinfo():
         cookies = flask.request.cookies
         cid = ""
         for (
-                i
+            i
         ) in (
-                flask.request.cookies
+            flask.request.cookies
         ):  # first cookie that isn't one of the corrowing known cookies,
             # because for some reason we encode the data in the name
             # of the cookie lol
@@ -485,8 +484,8 @@ def init_profile():
     imgs = []
     links = []
     for comic_id in comics:
-        if marvel.get_comic_by_id(comic_id):
-            (title, creatorList, onSaleDate, img, buyLink) = marvel.get_comic_by_id(
+        if marvel.getComicById(comic_id):
+            (title, creatorList, onSaleDate, img, buyLink) = marvel.getComicById(
                 comic_id
             )
             titles.append(title)
@@ -499,13 +498,15 @@ def init_profile():
 
 def init_profile2():
     """helper function"""
-    local_characters = decode_string(get_account_db_characters(flask_login.current_user.uid))
+    local_characters = decode_string(
+        get_account_db_characters(flask_login.current_user.uid)
+    )
     names = []
     descriptions = []
     imgs = []
     for character_id in local_characters:
-        if marvel.get_character_by_id(character_id):
-            (name, description, imgLinks) = marvel.get_character_by_id(character_id)
+        if marvel.getCharacterById(character_id):
+            (name, description, imgLinks) = marvel.getCharacterById(character_id)
             names.append(name)
             descriptions.append(description)
             imgs.append(imgLinks)
