@@ -16,9 +16,7 @@ app.secret_key = "this is the most secretive key in the universe!!!"
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-
 load_dotenv(find_dotenv())
-
 
 CRYPTOGRAPHY_KEY = os.getenv("CRYPTO_KEY").encode("UTF-8")
 encryption_engine = Fernet(CRYPTOGRAPHY_KEY)
@@ -79,26 +77,28 @@ def user_loader(uid):
 db.create_all()
 db.session.commit()
 
-# returns encrypted hash
+
+
 def encrypt(word):
+    """# returns encrypted hash"""
     word = word.encode("UTF-8")
-    hash = encryption_engine.encrypt(word)
-    hash = hash.decode("UTF-8")
-    return hash
+    local_hash = encryption_engine.encrypt(word)
+    local_hash = hash.decode("UTF-8")
+    return local_hash
 
 
-# decrypts the given hash, returning the strign which was originally encrypted
-def decrypt(hash):
-    hash = hash.encode("UTF-8")
-    word = encryption_engine.decrypt(hash)
+def decrypt(local_hash):
+    """# decrypts the given hash, returning the strign which was originally encrypted"""
+    local_hash = hash.encode("UTF-8")
+    word = encryption_engine.decrypt(local_hash)
     word = word.decode("UTF-8")
     return word
 
 
-# adds a new account to the database.
-# Make sure password is encrypted!!
-# returns 0 if successful, -1 if the username already exists
 def add_account(username, password):
+    """# adds a new account to the database.
+# Make sure password is encrypted!!
+# returns 0 if successful, -1 if the username already exists"""
     new_acc = Account(username=username, password=password, comics="", characters="")
     test_acc = Account.query.filter_by(username=username).first()
     if test_acc is not None:
@@ -109,9 +109,10 @@ def add_account(username, password):
     return 0
 
 
-# removes comic from the comics entry for the given user
-# returns 0 if successful, -1 if the comic could not be found
 def remove_comic(uid, comic_id):
+    """
+# removes comic from the comics entry for the given user
+# returns 0 if successful, -1 if the comic could not be found"""
     comics = decode_string(get_account_db_comics(uid))
     if comics.count(comic_id) == 0:
         return -1
@@ -121,21 +122,22 @@ def remove_comic(uid, comic_id):
     return 0
 
 
-# removes character from the characters entry for the given user
-# returns 0 if successful, -1 if the entry could not be found
 def remove_character(uid, character_id):
-    characters = decode_string(get_account_db_characters(uid))
-    if characters.count(character_id) == 0:
+    """# removes character from the characters entry for the given user
+# returns 0 if successful, -1 if the entry could not be found"""
+    local_characters = decode_string(get_account_db_characters(uid))
+    if local_characters.count(character_id) == 0:
         return -1
-    characters.remove(character_id)
-    get_account_db_entry(uid).characters = encode_string(characters)
+    local_characters.remove(character_id)
+    get_account_db_entry(uid).characters = encode_string(local_characters)
     db.session.commit()
     return 0
 
 
-# adds comic from the comics entry for the given user
-# returns 0 if successful, -1 if the entry could not be added because the max has been reached, and -2 if the entry is already present
 def add_comic(uid, comic_id):
+    """# adds comic from the comics entry for the given user
+# returns 0 if successful,
+# -1 if the entry could not be added because the max has been reached, and -2 if the entry is already present"""
     comics = decode_string(get_account_db_comics(uid))
     if len(comics) >= 20:
         return -1
@@ -147,63 +149,64 @@ def add_comic(uid, comic_id):
     return 0
 
 
-# adds character from the character entry for the given user
-# returns 0 if successful, -1 if the entry could not be added because the max has been reached, and -2 if the entry is already present
 def add_character(uid, character_id):
-    characters = decode_string(get_account_db_characters(uid))
+    """# adds character from the character entry for the given user
+    # returns 0 if successful, -1 if the entry could not be added
+    # because the max has been reached, and -2 if the entry is already present"""
+    local_characters = decode_string(get_account_db_characters(uid))
 
-    if len(characters) >= 20:
+    if len(local_characters) >= 20:
         return -1
-    if characters.count(character_id) > 0:
+    if local_characters.count(character_id) > 0:
         return -2
-    characters.append(character_id)
-    get_account_db_entry(uid).characters = encode_string(characters)
+    local_characters.append(character_id)
+    get_account_db_entry(uid).characters = encode_string(local_characters)
     db.session.commit()
     return 0
 
 
-# decodes a string, returning the encoded list of ids
-# return value of None means that the encoded string is invalid somehow
 def decode_string(encoded_string):
+    """# decodes a string, returning the encoded list of ids
+    # return value of None means that the encoded string is invalid somehow"""
     if encoded_string == "":
         return []
     id_list = encoded_string.split(";")
     # verification tests:
-    for id in id_list:
+    for ind_id in id_list:
         # no id should be empty
-        if len(id) == 0:
+        if len(ind_id) == 0:
             return None
         # all chars should be numbers
-        if not id.isdecimal():
+        if not ind_id.isdecimal():
             return None
     return id_list
 
 
-# returns the character at the given index
 def get_character(uid, character_index):
-    characters = decode_string(get_account_db_characters(uid))
-    return characters[character_index]
+    """# returns the character at the given index"""
+    this_characters = decode_string(get_account_db_characters(uid))
+    return this_characters[character_index]
 
 
-# returns the comci at the given index
 def get_comic(uid, comic_index):
+    """# returns the comci at the given index"""
     comics = decode_string(get_account_db_comics(uid))
     return comics[comic_index]
 
 
-# encodes a string for storage in the database
 def encode_string(id_list):
+    """# encodes a string for storage in the database"""
     ids_str = ""
-    for id in id_list:
+    for this_id in id_list:
         if len(ids_str) != 0:
             ids_str += ";"
-        ids_str += id
+        ids_str += this_id
     return ids_str
 
 
-# returns the UID of the given username.
-# returns -1 if the username doesn't exist in the database.
 def uid_by_username(username):
+    """# returns the UID of the given username.
+# returns -1 if the username doesn't exist in the database."""
     acc = Account.query.filter_by(username=username).first()
     if acc is None:
         return -1
@@ -211,25 +214,26 @@ def uid_by_username(username):
         return acc.uid
 
 
-# returns the account object associated with the given UID
 def get_account_db_entry(uid):
+    """# returns the account object associated with the given UID"""
     acc = Account.query.filter_by(uid=uid).first()
     return acc
 
 
-# returns the stored comics, will need to be decoded
 def get_account_db_comics(uid):
+    """# returns the stored comics, will need to be decoded"""
     return get_account_db_entry(uid).comics
 
 
-# returns the stored characters, will need to be decoded
 def get_account_db_characters(uid):
+    """# returns the stored characters, will need to be decoded"""
     return get_account_db_entry(uid).characters
 
 
 @app.route("/logout")
 @login_required
 def logout():
+    """logout"""
     flask_login.logout_user()
     return flask.render_template("logout.html")
 
@@ -256,7 +260,7 @@ def search():
                 search, offset
             )
 
-    if title == False:
+    if not title:
         flask.flash(
             "Either bad search parameters or Marvel API is down. Please try again later."
         )
@@ -301,22 +305,26 @@ def search():
 
 @app.route("/filter", methods=["POST"])
 def setFilter():
+    """set filter"""
     choice = flask.request.form["option"]
     return flask.redirect(flask.url_for("search", choice=choice))
 
 
 @app.route("/")
 def index():
+    """index"""
     return flask.render_template("index.html")
 
 
 @app.route("/signup")
 def signup():
+    """signup"""
     return flask.render_template("signup.html")
 
 
 @app.route("/signup", methods=["POST"])
 def register():
+    """register"""
     username = flask.request.form.get("username")
     password = encrypt(flask.request.form.get("password"))
     if add_account(username, password) == -1:
@@ -324,17 +332,19 @@ def register():
         return flask.redirect("/signup")
     else:
         add_account(username, password)
-        flask.flash("Sucessful signup!")
+        flask.flash("Successful signup!")
     return flask.redirect("/login")
 
 
 @app.route("/quiz")
 def quiz():
+    """quiz"""
     return flask.render_template("quiz.html")
 
 
 @app.route("/login", methods=["POST", "GET"])
 def sign_in():
+    """sing_in"""
     if flask.request.method == "POST":
         username = flask.request.form.get("username")
         password = flask.request.form.get("password")
@@ -359,9 +369,9 @@ def characterinfo():
     return flask.render_template("characterInfo.html")
 
 
-# sets favorite character in a redirect, because there are multiple forms and it gets weird
 @app.route("/setfav")
 def setfav():
+    """# sets favorite character in a redirect, because there are multiple forms and it gets weird"""
     cookies = flask.request.cookies
     cindex = cookies.get("cindex")
     if cindex:  # if the needed cookie exists
@@ -382,24 +392,27 @@ def setfav():
     return flask.render_template("index.html")
 
 
-# does NOT handle favorites for the characters, that is sent to /setfav because multiple forms
-# this is done by making the favorite button assign a cookie and redirecting to /setfav, because that is somehow the easiest way to do this
 @app.route("/characters", methods=["POST", "GET"])
 def characters():
+    """# does NOT handle favorites for the characters, that is sent to
+# /setfav because multiple forms
+# this is done by making the favorite button assign a
+# cookie and redirecting to /setfav,
+# because that is somehow the easiest way to do this"""
     if flask.request.method == "GET":
         return flask.render_template("characters.html")
     if flask.request.method == "POST":
         # search bar
-        search = flask.request.form["search"]
-        if search == "":
+        local_search = flask.request.form["search"]
+        if local_search == "":
             flask.flash("Bad search parameters, please try again!")
             return flask.render_template(
                 "characters.html", titles=[], imgLinks=[], descriptions=[]
             )
 
-        (ids, name, description, imgLink) = marvel.getCharacter(search, 0)
+        (ids, name, description, imgLink) = marvel.getCharacter(local_search, 0)
 
-        if ids != False:
+        if ids:
             return flask.render_template(
                 "characters.html",
                 titles=name,
@@ -416,10 +429,11 @@ def characters():
         )
 
 
-# both app routes because both are referenced and it's best not to rock the boat for now
+
 @app.route("/comicinfo", methods=["POST", "GET"])
 @app.route("/comicInfo", methods=["POST", "GET"])
 def comicinfo():
+    """# both app routes because both are referenced and it's best not to rock the boat for now"""
     if flask.request.method == "GET":
         return flask.render_template("comicInfo.html")
     if flask.request.method == "POST":
@@ -427,10 +441,12 @@ def comicinfo():
         cookies = flask.request.cookies
         cid = ""
         for (
-            i
+                i
         ) in (
-            flask.request.cookies
-        ):  # first cookie that isn't one of the corrowing known cookies, because for some reason we encode the data in the name of the cookie lol
+                flask.request.cookies
+        ):  # first cookie that isn't one of the corrowing known cookies,
+            # because for some reason we encode the data in the name
+            # of the cookie lol
             if i != "" and i != "session" and i != "id" and i != "cindex":
                 cid = i
                 break
@@ -445,28 +461,32 @@ def comicinfo():
 
 @app.route("/about")
 def about():
+    """abougt page"""
     return flask.render_template("landingPage.html")
 
 
 @app.route("/comicInfo", methods=["POST", "GET"])
 def comicInfo():
+    """comic info page"""
     return flask.render_template("comicInfo.html")
 
 
 @app.route("/characterInfo", methods=["POST", "GET"])
 def characterInfo():
+    """character info"""
     return flask.render_template("characters.html")
 
 
 def init_profile():
+    """parse db data"""
     comics = decode_string(get_account_db_comics(flask_login.current_user.uid))
     titles = []
     creators = []
     imgs = []
     links = []
     for comic_id in comics:
-        if marvel.getComicById(comic_id):
-            (title, creatorList, onSaleDate, img, buyLink) = marvel.getComicById(
+        if marvel.get_comic_by_id(comic_id):
+            (title, creatorList, onSaleDate, img, buyLink) = marvel.get_comic_by_id(
                 comic_id
             )
             titles.append(title)
@@ -478,13 +498,14 @@ def init_profile():
 
 
 def init_profile2():
-    characters = decode_string(get_account_db_characters(flask_login.current_user.uid))
+    """helper function"""
+    local_characters = decode_string(get_account_db_characters(flask_login.current_user.uid))
     names = []
     descriptions = []
     imgs = []
-    for character_id in characters:
-        if marvel.getCharacterById(character_id):
-            (name, description, imgLinks) = marvel.getCharacterById(character_id)
+    for character_id in local_characters:
+        if marvel.get_character_by_id(character_id):
+            (name, description, imgLinks) = marvel.get_character_by_id(character_id)
             names.append(name)
             descriptions.append(description)
             imgs.append(imgLinks)
@@ -494,8 +515,9 @@ def init_profile2():
 
 @app.route("/profile", methods=["POST", "GET"])
 def profile():
+    """faovrites page"""
     comics = init_profile()
-    characters = init_profile2()
+    this_characters = init_profile2()
     return flask.render_template(
         "profile.html",
         test="test",
@@ -508,9 +530,9 @@ def profile():
         creators=comics[1],
         imgs=comics[2],
         links=comics[3],
-        name=characters[0],
-        description=characters[1],
-        charImg=characters[2],
+        name=this_characters[0],
+        description=this_characters[1],
+        charImg=this_characters[2],
     )
 
 
